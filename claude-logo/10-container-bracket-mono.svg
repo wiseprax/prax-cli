@@ -1,0 +1,21 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Praxant — Container Bracket (monochrome)">
+  <!-- Four corner brackets — full container frame -->
+  <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter">
+    <polyline points="15,28 15,15 28,15"/>
+    <polyline points="72,15 85,15 85,28"/>
+    <polyline points="15,72 15,85 28,85"/>
+    <polyline points="72,85 85,85 85,72"/>
+  </g>
+  <!-- Inner network edges -->
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.7">
+    <path d="M 36 42 Q 43 50 50 56"/>
+    <path d="M 64 42 Q 57 50 50 56"/>
+  </g>
+  <!-- Worker nodes -->
+  <g fill="currentColor">
+    <circle cx="36" cy="42" r="4.5"/>
+    <circle cx="64" cy="42" r="4.5"/>
+  </g>
+  <!-- Supervisor node (focal) -->
+  <circle cx="50" cy="56" r="5.5" fill="currentColor"/>
+</svg>

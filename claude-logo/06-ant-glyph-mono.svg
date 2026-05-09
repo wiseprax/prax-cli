@@ -1,0 +1,28 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Praxant — Ant Glyph (monochrome)">
+  <!-- Antennae (jointed) -->
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="47,22 43,16 39,13"/>
+    <polyline points="53,22 57,16 61,13"/>
+  </g>
+  <!-- Petioles (thin connectors) -->
+  <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+    <line x1="50" y1="30" x2="50" y2="38"/>
+    <line x1="50" y1="48" x2="50" y2="60"/>
+  </g>
+  <!-- Legs (jointed at thorax — femur + tibia) -->
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="46,39 38,34 30,37"/>
+    <polyline points="46,43 32,46 22,52"/>
+    <polyline points="46,47 36,54 28,60"/>
+    <polyline points="54,39 62,34 70,37"/>
+    <polyline points="54,43 68,46 78,52"/>
+    <polyline points="54,47 64,54 72,60"/>
+  </g>
+  <!-- Head + thorax -->
+  <g fill="currentColor">
+    <circle cx="50" cy="26" r="4.2"/>
+    <circle cx="50" cy="43" r="5.5"/>
+  </g>
+  <!-- Abdomen (largest, focal) -->
+  <circle cx="50" cy="70" r="8.5" fill="currentColor"/>
+</svg>

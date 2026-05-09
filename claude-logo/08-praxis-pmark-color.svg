@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Praxant — Praxis P-Mark (color)">
+  <!-- Stem -->
+  <line x1="32" y1="22" x2="32" y2="80" stroke="#1A2B4A" stroke-width="5" stroke-linecap="round"/>
+  <!-- Bowl arc -->
+  <path d="M 32 22 Q 66 22 66 41 Q 66 60 32 60" fill="none" stroke="#1A2B4A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Pivot node (focal accent) -->
+  <circle cx="32" cy="60" r="6" fill="#B45309"/>
+</svg>

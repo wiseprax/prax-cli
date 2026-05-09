@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Praxant - Fresh Logo Concepts</title>
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --card: #ffffff;
+    --ink: #16263f;
+    --muted: #667085;
+    --line: #ddd7cb;
+    --dark: #0c1422;
+    --dark-line: #1a2940;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(circle at top, #fbfaf7 0%, var(--bg) 55%);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 48px 24px 80px; }
+  h1 { margin: 0 0 10px; font-size: 40px; letter-spacing: -0.03em; }
+  .lede { max-width: 760px; margin: 0 0 28px; color: var(--muted); }
+  .meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 42px; }
+  .pill {
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.78);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .concept { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 28px; }
+  .head { display: flex; gap: 16px; align-items: baseline; margin-bottom: 18px; }
+  .num { width: 36px; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .head h2 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
+  .tag { color: var(--muted); font-style: italic; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stage { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .stage.dark { background: var(--dark); border-color: var(--dark-line); }
+  .frame { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 28px; }
+  .frame img { width: 100%; max-width: 260px; height: auto; }
+  .label { padding: 10px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+  .stage.dark .label { border-top-color: var(--dark-line); color: #9cb0cb; }
+  .notes { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .note { background: rgba(255,255,255,0.82); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .note h3 { margin: 0 0 8px; color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .note p, .note ul { margin: 0; font-size: 14px; }
+  .note ul { padding-left: 18px; }
+  .note li + li { margin-top: 6px; }
+  footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  @media (max-width: 900px) {
+    .grid, .notes { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Praxant Fresh Logo Concepts</h1>
+  <p class="lede">
+    A new set of ten concepts created from scratch for Praxant. These directions avoid the earlier ant, node-network,
+    hexagon, orbital, bracket, and anvil motif family and focus instead on control, governance, locality, review, and runtime neutrality.
+  </p>
+  <div class="meta">
+    <div class="pill">Primary ink: <code>#16263F</code></div>
+    <div class="pill">Accent copper: <code>#C56B2D</code></div>
+    <div class="pill">Transparent SVG backgrounds</div>
+    <div class="pill">All concepts shown on light and dark surfaces</div>
+  </div>
+
+  <section class="concept">
+    <div class="head"><div class="num">01</div><h2>Control Dial</h2><div class="tag">Autonomy, but under deliberate control.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-01-control-dial.svg" alt="Control Dial logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-01-control-dial.svg" alt="Control Dial logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>The dial says the product promise in one move: teams can turn autonomy up or down instead of accepting a fixed vendor-defined workflow.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Clear control metaphor.</li><li>Strong infrastructure tone.</li><li>Clean scaling behavior.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Somewhat operational in feel.</li><li>Dial imagery is familiar in systems software.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">02</div><h2>Signal Weave</h2><div class="tag">Different runtimes, one woven workflow.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-02-signal-weave.svg" alt="Signal Weave logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-02-signal-weave.svg" alt="Signal Weave logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>Praxant composes multiple providers and runtimes into a single supervised process. The weave emphasizes structure made from independent strands.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Dynamic and layered.</li><li>Avoids generic network diagrams.</li><li>Good motion potential.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>More abstract at first glance.</li><li>Can feel middleware-like if unsupported by messaging.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">03</div><h2>Policy Gate</h2><div class="tag">Permission, thresholds, and supervised passage.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-03-policy-gate.svg" alt="Policy Gate logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-03-policy-gate.svg" alt="Policy Gate logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>Praxant is not just agent execution. It is gated execution with rules, approvals, and escalation. This concept centers that control surface.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Serious and enterprise-friendly.</li><li>Explains approval logic clearly.</li><li>Pairs well with trust messaging.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>More conservative than bolder concepts.</li><li>Less expressive of runtime neutrality.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">04</div><h2>Runtime Ribbon</h2><div class="tag">Many execution paths, one orchestration layer.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-04-runtime-ribbon.svg" alt="Runtime Ribbon logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-04-runtime-ribbon.svg" alt="Runtime Ribbon logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>The converging ribbons express the runtime-neutral product strategy directly: different agent engines are brought into one governed stream.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Strong multi-runtime story.</li><li>Fluid without being trendy.</li><li>Excellent for motion design.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Needs explanation to land fast.</li><li>Less specific to local-first control.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">05</div><h2>Local Beacon</h2><div class="tag">A local operating center, not a remote black box.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-05-local-beacon.svg" alt="Local Beacon logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-05-local-beacon.svg" alt="Local Beacon logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>This concept emphasizes that Praxant runs where the team chooses. The beacon signals a locally owned command point rather than outsourced orchestration.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Clear local-first metaphor.</li><li>Memorable silhouette.</li><li>Good fit for self-hosted positioning.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Can lean toward observability or networking.</li><li>Less direct about orchestration policy.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">06</div><h2>Relay Stack</h2><div class="tag">Layered systems, supervised progression.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-06-relay-stack.svg" alt="Relay Stack logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-06-relay-stack.svg" alt="Relay Stack logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>Praxant coordinates work through layers: runtime, control, review, and merge. The stacked form shows that structure without using typical cloud or node cliches.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Strong infrastructure character.</li><li>Good fit for docs and UI.</li><li>Adaptable shape language.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Less emotionally distinctive.</li><li>Could be read as generic platform software.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">07</div><h2>Sovereign Window</h2><div class="tag">Visible, bounded, inspectable execution.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-07-sovereign-window.svg" alt="Sovereign Window logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-07-sovereign-window.svg" alt="Sovereign Window logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>The platform promise is that nothing important happens in the dark. This concept frames agent work as something supervised and visible through a stable boundary.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Strong transparency metaphor.</li><li>Calm and serious presence.</li><li>Simple, usable geometry.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Less dynamic visually.</li><li>Needs messaging support to feel unique.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">08</div><h2>Merge Fork</h2><div class="tag">Many possible paths, one reviewed path forward.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-08-merge-fork.svg" alt="Merge Fork logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-08-merge-fork.svg" alt="Merge Fork logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>Autonomous coding creates branches of possibility. Praxant's job is to guide them into one governed route through review, policy, and merge workflow.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Directional and compact.</li><li>Good convergence story.</li><li>Strong movement in the silhouette.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Can read as version-control-specific.</li><li>Narrower positioning story than broader concepts.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">09</div><h2>Review Lens</h2><div class="tag">Automation that remains readable and inspectable.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-09-review-lens.svg" alt="Review Lens logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-09-review-lens.svg" alt="Review Lens logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>Praxant is not meant to hide code generation. The lens metaphor emphasizes reviewability, understanding, and policy-backed scrutiny before progression.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Best review-and-visibility metaphor in the set.</li><li>Approachable but still serious.</li><li>Distinctive on product and docs surfaces.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Can underplay automation power.</li><li>Lens imagery can skew analytical rather than operational.</li></ul></article></div>
+  </section>
+  <section class="concept">
+    <div class="head"><div class="num">10</div><h2>Command Knot</h2><div class="tag">Runtimes, policy, and workflow tied into one system.</div></div>
+    <div class="grid"><div class="stage"><div class="frame"><img src="fresh-10-command-knot.svg" alt="Command Knot logo"></div><div class="label">light surface</div></div><div class="stage dark"><div class="frame"><img src="fresh-10-command-knot.svg" alt="Command Knot logo"></div><div class="label">dark surface</div></div></div>
+    <div class="notes"><article class="note"><h3>Why</h3><p>This is the most identity-led concept. It treats orchestration as the act of tying multiple powerful forces into one durable and controlled whole.</p></article><article class="note"><h3>Strong Points</h3><ul><li>Most ownable abstract identity.</li><li>Feels durable and intentional.</li><li>Good long-term brand potential.</li></ul></article><article class="note"><h3>Weak Points</h3><ul><li>Most abstract concept here.</li><li>The meaning is not immediate without explanation.</li></ul></article></div>
+  </section>
+
+  <footer>
+    Fresh set files: <code>fresh-01-control-dial.svg</code> through <code>fresh-10-command-knot.svg</code>.
+    This preview intentionally ignores the older concept set still present in the directory.
+  </footer>
+</div>
+</body>
+</html>

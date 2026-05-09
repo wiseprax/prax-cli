@@ -1,0 +1,22 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Praxant — Hidden Ant Network (monochrome)">
+  <!-- Antennae -->
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <path d="M 47 19 Q 42 13 40 11"/>
+    <path d="M 53 19 Q 58 13 60 11"/>
+  </g>
+  <!-- Legs (3 per side) -->
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.85">
+    <path d="M 44 38 Q 32 36 26 30"/>
+    <path d="M 43 42 Q 28 42 22 42"/>
+    <path d="M 44 46 Q 32 50 26 54"/>
+    <path d="M 56 38 Q 68 36 74 30"/>
+    <path d="M 57 42 Q 72 42 78 42"/>
+    <path d="M 56 46 Q 68 50 74 54"/>
+  </g>
+  <!-- Body nodes: head, thorax (focal), abdomen -->
+  <g fill="currentColor">
+    <circle cx="50" cy="22" r="4"/>
+    <circle cx="50" cy="42" r="7"/>
+    <circle cx="50" cy="68" r="6"/>
+  </g>
+</svg>

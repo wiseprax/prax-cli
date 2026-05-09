@@ -1,0 +1,18 @@
+# Machine-local Claude / OpenClaude state
+.claude/
+.openclaude/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Environment / secrets (defense in depth — none should be added)
+.env
+.env.local
+*.pem
+*.key
