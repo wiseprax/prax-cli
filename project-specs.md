@@ -63,7 +63,6 @@ This project draws inspiration from several existing systems but is **not derive
 
 | Reference | Role | Key takeaway |
 |---|---|---|
-| **claude-ai hub** (Marins / LRM) | Inspiration for skills + hooks + multi-repo workspace patterns, lifecycle discipline, and agent role design; now also converging toward direct CLI/local execution | Strong workflow model worth productizing; remaining gap is runtime-neutral, local-first platformization |
 | **Multica** (`github.com/multica-ai/multica`) | Inspiration for multi-CLI dispatch + Kanban + WebSocket live UI. **Studied for architectural patterns only** — Multica ships under a Dify-style "modified Apache 2.0" with commercial-use carve-out, anti-rebrand clause, and unilateral-relicensing right; the source code is not a fork base candidate and is not copied into Praxant. | Polished Kanban UI shape; their daemon-spawns-CLI worker model |
 | **OpenHands** (ex-OpenDevin) | Inspiration for autonomous worker model + Docker-based agent execution. Studied for patterns only; not a fork base. | Container isolation patterns, agent UI primitives |
 | **Aider** | Inspiration for git-patch oriented workflow | Conversational PR-friendly dispatch |
@@ -72,20 +71,20 @@ This project draws inspiration from several existing systems but is **not derive
 | **LiteLLM** | Inspiration for multi-provider abstraction | ~95% community-contributed providers — proves the adapter pattern scales |
 | **Terraform** | Inspiration for provider plugin architecture | Community-owned adapter ecosystem proven at scale |
 
-**Borrowed across references** (worth carrying forward into this project — *as patterns, not as source code; Praxant is a clean-room Go implementation*):
-- Skills + hooks pattern as a way to encode operational knowledge per project (from claude-ai hub)
-- Vaultwarden credential conventions (from claude-ai hub)
-- Forgejo + Mattermost as primary v1 VCS + chat (from claude-ai hub, reflecting common self-hosted stacks)
-- Multi-CLI dispatch model (from Multica)
-- Live WebSocket UI for agent progress (from Multica + OpenHands)
-- Containerized agent isolation (from OpenHands)
-- Adapter / provider abstraction (from LiteLLM, Terraform)
+**Praxant design choices that align with patterns proven elsewhere** (the patterns inform shape, never source code — Praxant is a clean-room Go implementation):
+- Skills + hooks pattern as a way to encode operational knowledge per project
+- Vaultwarden as the human-managed source of truth for credentials, with OpenBao as the runtime broker
+- Forgejo + Mattermost as primary v1 VCS + chat — common in sovereign self-hosted stacks
+- Multi-CLI dispatch model (referenced from Multica)
+- Live WebSocket UI for agent progress (referenced from Multica + OpenHands)
+- Containerized agent isolation (referenced from OpenHands)
+- Adapter / provider abstraction (referenced from LiteLLM, Terraform)
 
-**Deliberately rejected** (where references took an approach we don't):
-- CI/CD as the defining execution identity (historically present in claude-ai, now already being reduced there as well) — Praxant is explicitly local-first: the developer's machine or team-controlled host is the primary home of agent execution; CI remains for validation and selected automations only.
-- Per-project guard hooks coupled to a single agent CLI (rejected from claude-ai hub) — we abstract over agent runtime so guards can apply across CLIs
-- VCS lock-in (rejected from Multica, OpenHands, Sweep AI which are all GitHub-first) — we abstract over VCS providers from day one
-- Tight coupling between agent dispatch and CI/CD lifecycle (rejected from claude-ai hub) — CI/CD remains for stateless validation only (tests, lint, etc.)
+**Deliberately rejected** (where the wider field tends in an approach Praxant won't):
+- CI/CD as the defining execution identity — Praxant is explicitly local-first: the developer's machine or team-controlled host is the primary home of agent execution; CI remains for validation and selected automations only.
+- Per-project guard hooks coupled to a single agent CLI — Praxant abstracts over agent runtime so guards can apply across CLIs
+- VCS lock-in (rejected from Multica, OpenHands, Sweep AI which are all GitHub-first) — Praxant abstracts over VCS providers from day one
+- Tight coupling between agent dispatch and CI/CD lifecycle — CI/CD remains for stateless validation only (tests, lint, etc.)
 
 The charter exists to:
 1. Anchor every future decision against a stable set of design principles
@@ -391,7 +390,6 @@ These must be resolved before implementation. Each is a sub-project unto itself 
 | ~~**Project name**~~ | **DECIDED 2026-04-27: Praxant** (domain praxant.ai reserved) | — |
 | **Initial v1 scope (MVP definition)** | Determines whether ship is in 3 weeks or 3 months. Pareto-driven: ship the 20% that delivers 80% of value. | SP-A finalization |
 | **Governance model details** | Initial: solo BDFL; transitions to core-team after first co-maintainer. SP-D defines the specific transition triggers. | SP-D |
-| **What to do with the existing claude-ai hub during transition** | Run parallel? Migrate skills/hooks? Deprecate after v1? | Implementation phase |
 | **Initial agent CLI support beyond Claude Code** | Codex? OpenCode? Gemini? Or ship Claude-only first and add later? | SP-4 — Pareto says Claude-only at v0.1 |
 | **Long-runtime UX framing in user-facing positioning** | A Praxant run is a multi-actor workflow producing a reviewed, signed-off branch — not a single Claude session. Expected runtime is proportional to the workflow, not to a single agent's response time. Without explicitly setting this expectation in README / §3 / launch posts, naïve readers will benchmark Praxant against raw `claude` and conclude it is "slow." | Revisit when SP-1 produces real timing data; no urgent action until then |
 | **REST vs MCP for the skill↔engine interface** | The platform API exposes workflow transitions, projects, actor permissions, and proxied service operations to skills. REST is conventional and easy for any skill to consume; MCP fits naturally into Claude Code's tool-use model and exposes operations as model-visible tools. Choice affects how skills are written, how authorization is checked, and how the credential-proxy pattern is enforced. Probably both are supported eventually; the question is which ships first. | Settle when SP-1 design starts |
@@ -780,6 +778,7 @@ flowchart LR
 - **OpenBao** is the runtime broker: the orchestrator authenticates to it (AppRole preferred), receives short-lived per-task tokens, and uses them to fetch credentials. **OpenBao is what skills/agents ever see traces of**, never Vaultwarden.
 - **The seam between Vaultwarden and OpenBao** (sync mechanism — periodic pull, secret engine, manual provisioning, etc.) is an SP-9 design decision; v0.1 may start with a simple manual-sync or scheduled pull and add automation later.
 - **Why this layering:** Vaultwarden is a static-secret store and cannot issue short-lived dynamic tokens. OpenBao can. The credential-helper pattern committed in the platform-API-as-security-boundary decision (2026-05-10) needs short-lived tokens, so OpenBao is required at the runtime tier. Keeping Vaultwarden upstream means the master secrets stay where humans already manage them.
+- **Bring-up backing (relaxed-security spin-up).** The *interface* exposed to skills is fixed from day one (platform API as security boundary — skills never see raw tokens, only typed proxied operations). The *backing storage* can be phased: the very first runnable Praxant uses an in-DB encrypted credentials table (key from env) that the admin area writes to directly, sufficient for getting the spine alive end-to-end. OpenBao is plugged in as the actual backend before v0.1 ships publicly. This phasing is explicit and time-bounded: the interface contract is non-negotiable; the backing is allowed to be simple during dogfooding so we don't gate "first running task" on the full broker. Tracked as a SP-1.5 / SP-9 sequencing concern, not a permanent compromise.
 
 **Interface (provider abstraction):**
 
@@ -914,11 +913,15 @@ Labels are the universal command primitive — same convention as Forgejo issue 
 
 The label vocabulary (e.g., `praxant:pause`, `praxant:escalate-council`, `praxant:promote`, `praxant:abort`) belongs in `ubiquitous_language.md` once it stabilizes.
 
-**Workflow authoring admin UI:**
-- CRUD interface for workflow definitions (states, transitions, actor types, conditions, task dependencies)
-- Editor for actor permissions (which actor type may fire which transition)
-- Validation: schema-checked at edit time so misspellings and missing fields are caught at save, not at runtime
-- All authoring happens here — **no config-file editing** (DB is the one authoritative copy that gets enforced team-wide on save)
+**Admin area (inside the kanban app, behind a menu):** the single authoritative surface for everything substrate — workflow shape, personas, authorization, thresholds, connections, and credentials. Skills can ship *suggestions* for workflow shape (registration-time manifests), but the team owns the saved copy and every transition the platform enforces.
+
+- **Workflow authoring** — CRUD interface for workflow definitions (states, transitions, actor types, conditions, task dependencies). Skill-shipped manifests preload the form; the admin reviews, wires actor types to the team's personas, and saves.
+- **Personas / Actors** — the team's catalog of who can act (humans, named bot accounts, agent runtimes). Skills declare actor *types* (planner, executor, reviewer); the admin maps types to actual personas.
+- **Authorization** — per-transition rules (who may fire what), per-actor permissions on proxied operations.
+- **Thresholds, limits, metrics** — token caps per task, wall-clock caps, concurrency caps, budget alerts.
+- **Connections / credentials** — register and manage every downstream service the orchestrator talks to: VCS host + token, chat host + token, agent-runtime OAuth tokens, model-provider tokens, MCP server endpoints, etc. The admin UI is where humans enter and rotate these. Skills never see raw tokens — they call typed proxied operations through the platform API (SP-1 / SP-9 contract).
+- **Validation** — schema-checked at edit time so misspellings, missing fields, and unwired actor types are caught at save, not at runtime.
+- **No config-file editing** — DB is the one authoritative copy that gets enforced team-wide on save.
 
 **Build choice (clean-room):** Next.js 16 + WebSocket frontend, ~2 weeks of focused work for the v0.1 task-board scope; the workflow-authoring UI extends this. Multica's Kanban shape and OpenHands' agent-inspection primitives are studied as visual/UX references. **No UI code is copied** from any reference.
 
@@ -1074,7 +1077,6 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-04-27 | Geographic scope: Americas + Europe + Asia (Africa explicitly out of scope for now) | User direction; covers ~95% of addressable self-hosted developer market |
 | 2026-04-27 | Launch amplification audience: global self-hosted homelab community | Disproportionate signal-boost; aligned values |
 | 2026-04-27 | Regional considerations are product features (on-demand), not adoption phases | Avoids pre-building localization / region-specific features without real user demand |
-| 2026-04-27 | Project owner is independent of LRM/Marins reference repo; the reference is studied for inspiration and as an explicit example of what NOT to do (CI/CD-based agent execution) | User clarification: this is the user's project, not Marins' — borrows patterns where useful, deliberately diverges where his approach was wrong |
 | 2026-04-27 | ~~Secrets provider abstraction with Vaultwarden as first adapter; OpenBao + cloud secret managers (AWS/Azure/GCP) + SOPS + Infisical as on-demand follow-on adapters~~ **REVISED 2026-05-10 (entry below) — first adapter is OpenBao; Vaultwarden retained as upstream source of truth.** Original rationale preserved: same provider-pattern philosophy as VCS / Chat / Agent / Model; unlocks cloud-deployed users as a viable adoption tier. | Original choice driven by Vaultwarden already running on the user's Synology and being human-friendly. Reversed when the credential-helper pattern (short-lived capability tokens) was committed to in SP-9, because Vaultwarden is fundamentally a static-secret store and cannot issue short-lived dynamic tokens. |
 | 2026-04-27 | Ruthless MVP for first public release: 1 VCS, 1 chat, 1 agent, 1 model | OSS history: narrow excellent core wins over feature-complete vision |
 | 2026-04-27 | Never auto-merge — humans always make final merge decision | ToS posture + cost cap + defense in depth |
@@ -1088,6 +1090,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-05-10 | **Platform API as security boundary; "credentials never appear in prompt context" as the operative bar.** The platform's REST/MCP surface (interface TBD — §6) centralizes communication with downstream services. Skills make typed proxied operation calls; the platform holds tokens internally and translates calls into Forgejo / Mattermost / Vaultwarden / etc. API calls. Actor permissions (which actor type may do what) are admin-configurable from the same UI as workflow definitions. The fundamentalist bar (*"no skill can ever touch a service directly"*) is infeasible given harness shell access and is not pursued. Realistic posture is layered defense: default-deny container egress + allowlist (already in §5), short-lived capability tokens issued per workflow transition, credential-helper pattern, per-skill network namespace isolation, audit logging — specific design TBD at SP-1 / SP-9 time. | Tokens in skill context means tokens in transcripts, in logs, and in any prompt-injection payload that gets exfiltrated. Centralizing through a typed proxy keeps credentials in the orchestrator process and the secrets provider, where the developer-workstation threat model can defend them. Acknowledged-difficult-to-perfectly-enforce; treated as a north-star principle that admits graceful degradation. The *lethal trifecta* framing (untrusted tokens × internet access × sensitive data → data loss) makes the same point in different vocabulary. |
 | 2026-05-10 | **Two-tier secrets architecture: OpenBao as the runtime broker, Vaultwarden retained as upstream source of truth.** Reverses the 2026-04-27 choice of Vaultwarden as the v0.1 first adapter. Vaultwarden continues to host human-managed long-lived secrets (PATs, OAuth tokens, API keys) — same place admins already manage them, no migration. OpenBao runs as a runtime broker (likely in a container alongside the orchestrator), is fed from Vaultwarden via a sync layer (mechanism TBD at SP-9 design time), and is what the orchestrator actually authenticates against (AppRole) to receive **short-lived per-task tokens**. Skills and agents only ever see traces of OpenBao-issued ephemeral credentials, never Vaultwarden directly. The §4 vendor-neutrality matrix, the §5 secrets-decision row, the §7 SP-9 brief, the §9 SP-9 detail, and Phase 2 description are all updated to reflect this. | The credential-helper pattern committed in the platform-API-as-security-boundary decision (same day, earlier entry) requires short-lived dynamic tokens — Vaultwarden cannot issue those (it is a static-secret store). OpenBao supports AppRole auth, KV-v2 paths, response wrapping, and dynamic secrets, all of which are needed to make the layered defense in SP-9 actually feasible. The two-tier pattern keeps the master secrets where humans already manage them (Vaultwarden) while hardening the runtime credential surface (OpenBao). It also reverses the 2026-04-28 "defer OpenBao" line in the Pareto-driven roadmap — OpenBao is now in v0.1 because the security architecture depends on its capabilities. |
 | 2026-05-10 | **Charter expansion: validation contracts, structured handoffs, recovery heuristics, mission-control UX, council guidance.** Following 2026-05-09 / 2026-05-10 design discussions, the charter incorporates: (a) **validation contracts** as worktree artifacts — assertions defining "done" written by the planner-skill, consumed by validator-skills; (b) **structured handoff document** as the schema for SP-1's progress file — what was completed, what remains, commands run with exit codes, issues discovered, plus recovery-state heuristics (dirty-tree-with-tests-passing → probably done; dirty-tree-with-tests-failing → likely mid-flight broken); (c) **validation-loopback as a first-class transition** in workflow definitions — validation rarely succeeds first try; (d) **serial execution with parallelism scoped to read-only operations** — confirms the task-dependencies-define-synch decision; (e) **provider diversity over model diversity** for the deferred SP-7 council; (f) **mission-control-style UX cues** (% features complete, % budget burned) for SP-8; (g) **Ralph Loop "one engineer in a relay team"** framing as the canonical interpretation in SP-5. | Multiple independent design discussions converged on these primitives. They tighten the substrate-not-behavior tenet by giving it concrete v0.1 / v0.2-queued primitives. |
+| 2026-05-11 | **Admin area scope expanded inside SP-8; v0.1 spin-up may run on relaxed-security credential backing.** The kanban app's admin area is the single authoritative surface for everything substrate: workflow shape, **personas / actor types** (mapping skill-declared actor types to the team's actual humans / bots / runtimes), **authorization rules** (who may fire what transition, which proxied operations each actor type can call), **thresholds, limits, metrics** (token caps, wall-clock caps, concurrency caps, budget alerts), and **connections / credentials** (every downstream service URL + token — VCS, chat, agent runtime OAuth, model-provider tokens, MCP server endpoints). Skills can ship workflow-shape *suggestions* via registration-time manifests, but the saved authoritative copy and every enforced transition belong to the team. Separately, the v0.1 *bring-up* phase may use an in-DB encrypted credentials table (key from env) as the OpenBao backing while the spine comes alive end-to-end; OpenBao is plugged in as the actual backend before v0.1 ships publicly. The **interface** exposed to skills (platform API as security boundary, skills never see raw tokens, only typed proxied operations) is non-negotiable from day one — only the backing storage is allowed to be simple during dogfooding. | Two related realizations: (a) "no admin-UI bottleneck for skill-supplied workflows" was wrong because the admin UI is irreducible — personas, authorization, thresholds, and credentials are team-level concepts that no skill manifest can supply; skill manifests prefill the workflow-shape portion only. (b) Gating "first running task" on the full two-tier OpenBao broker is needless friction during dogfood; the security architecture's load-bearing piece is the *interface contract* (skills can't touch raw tokens), which can sit in front of either backing. Phasing the backing keeps the contract honest without paying the OpenBao integration tax before any task has ever run. |
 
 ---
 
@@ -1181,10 +1184,9 @@ Projects whose architecture / code / community we should learn from:
 
 - MVP scope finalization (Pareto principles agreed; specific feature list to lock in)
 - Governance model details
-- claude-ai hub transition plan
 - Initial agent CLI support beyond Claude Code (Pareto says Claude-only at v0.1)
 
-**Charter file:** `/home/wellington/Downloads/claude-ai-main/praxagent/project-specs.md`
+**Charter file:** `/home/wellington/workspace/praxant.ai/prax-agent/project-specs.md`
 
 The discussion is flushed into the charter. The architecture is now decided enough to move toward implementation. Next concrete action when ready: SP-A formal brainstorm to finalize tagline + persona docs, then begin writing the SP-1 (orchestrator spine) implementation plan with the writing-plans skill — which is when this conversation transitions from design to actual code.
 

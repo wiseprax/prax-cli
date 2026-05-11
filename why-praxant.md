@@ -27,56 +27,40 @@ It is trying to become the orchestration layer around them.
 
 ---
 
-## What Has Already Been Proven
+## The Design Principles That Hold
 
-One important thing is already clear:
+The structural shape of agent work that Praxant commits to is clear:
 
-the agent workflow model works.
+- agent roles are useful — different phases need different behaviors and permissions
+- visible workflow beats invisible prompting — what an agent is doing should be inspectable
+- state transitions matter — explicit lifecycle stages are better than hidden chat output
+- structured handoffs matter — what one phase did and what the next phase needs has to be written down
+- deterministic rules belong in code — gates, automation policy, escalation are not prompt content
+- repo-native coordination wins — issues, PRs, comments, and labels are the right substrate
 
-The work done in `claude-ai` already proved several important ideas:
-
-- agent roles are useful
-- visible workflow is better than invisible prompting
-- state transitions matter
-- structured handoffs matter
-- deterministic rules should live in code
-- repo-native coordination works
-
-So the question is no longer whether those ideas are viable.
-
-They are viable.
-
-The question now is what form they should take if the goal is a broader open-source platform.
+These are Praxant's design commitments. Each of them rules out a class of common implementation shapes.
 
 ---
 
-## Why The Current Form Is Not The Final Form
+## What Common Implementation Shapes Get Wrong
 
-A working internal system is not automatically the right product foundation.
+Most working agent setups today are limited because they are:
 
-The current form is limited because it is:
-
-- centered on Claude rather than runtime abstraction
+- centered on one model vendor rather than runtime-neutral
 - shaped around one organization's workflow language
 - tied to CI/CD-era execution assumptions
 - rigid about human approval
 - optimized for one operator who already understands the system
 
-Those are not failures.
+These limitations are not failures of effort. They are normal characteristics of systems built to work first, before being generalized.
 
-They are normal characteristics of a system that was built to work first.
-
-But if the goal is a reusable platform, those assumptions need to be generalized.
+A reusable platform needs different defaults — runtime neutrality, configurable autonomy, local-first execution, and a vocabulary that does not assume the reader is already inside one team's operating model.
 
 ---
 
 ## Why Local Execution Is The Right Direction
 
-Both of us already agree on the main architectural shift:
-
-CI/CD pipelines are not the right long-term execution model for this.
-
-The updated `claude-ai` docs already show movement in that direction: direct CLI invocation is now part of the operating guidance, which means the convergence is no longer theoretical.
+The main architectural shift is clear: CI/CD pipelines are not the right long-term execution model for autonomous coding agents. Agents are interactive, long-running, and need addressable supervision; CI runners are fire-and-forget. Forcing one into the other distorts both.
 
 The better model is:
 
@@ -97,26 +81,19 @@ It should not be the primary home of agent execution.
 
 Praxant should not be thought of as a pile of borrowed parts.
 
-Two bodies of prior work shape its design:
+The broader autonomous-agent OSS ecosystem (Multica, OpenHands, Aider, Cline, FrankClaw, Paperclip, Goose) supplies architectural patterns for orchestration, container isolation, multi-CLI dispatch, and agent UX. None of those projects assembles those patterns the way Praxant does, and none of them combines them with: VCS-as-source-of-truth, configurable workflow engine, multi-model review council, live mid-task message-bus supervision, two-tier secrets brokered through OpenBao, and a strict substrate-not-behavior boundary.
 
-- the `claude-ai` work provides workflow discipline, lifecycle logic, role design, and operational lessons
-- the broader autonomous-agent OSS ecosystem (Multica, OpenHands, Aider, Cline, FrankClaw) provides architectural patterns for orchestration, container isolation, multi-CLI dispatch, and agent UX
-
-The product opportunity is in the synthesis — and in the parts none of those references get right.
+The product opportunity is in the synthesis — and in the specific stances none of those references take.
 
 Praxant is a **clean-room implementation in Go**. It studies prior systems for what works and writes its own code. **No source code is forked from any of those references.** Multica was briefly considered as a fork base, but its "modified Apache 2.0" license — commercial-use carve-outs, anti-rebrand clauses, unilateral-relicensing rights — is incompatible with Praxant's Apache 2.0 commitment, sovereign-tech positioning, and grant-funding strategy.
 
-`claude-ai` alone is not enough.
-
-The OSS ecosystem alone is not enough.
-
-Together, with the execution model made explicitly local-first, the abstractions generalized, and the implementation written cleanly under a permissive OSI-approved license, there is a real platform.
+With the execution model made explicitly local-first, the abstractions generalized, and the implementation written cleanly under a permissive OSI-approved license, there is a real platform here that the rest of the ecosystem has not produced.
 
 ---
 
-## What Praxant Changes
+## What Praxant Stands For
 
-Praxant keeps the strongest parts of the current internal workflow model:
+Praxant commits to the proven structural elements of agent work:
 
 - role specialization
 - visible workflow
@@ -124,13 +101,13 @@ Praxant keeps the strongest parts of the current internal workflow model:
 - structured progression through stages
 - engineering work expressed through normal repo artifacts
 
-But it changes the assumptions around them:
+And it makes the assumptions around them explicit, where the broader field tends to leave them implicit:
 
-- from Claude-centric to runtime-neutral
-- from internal workflow to product platform
-- from fixed human gates to configurable automation policy
-- from hybrid internal execution patterns to a clearly local-first container execution model
-- from one operator's operating system to a platform other teams can adopt
+- runtime-neutral rather than vendor-centric
+- product platform rather than internal workflow
+- configurable automation policy rather than fixed human gates
+- local-first container execution rather than CI/CD-bound execution
+- a platform other teams can adopt rather than one operator's operating system
 
 ---
 
@@ -174,15 +151,11 @@ Nothing important should happen in the dark.
 
 ## Why This Project Is Worth Joining
 
-This is the practical reason to take Praxant seriously:
+The practical reason to take Praxant seriously:
 
-the hardest conceptual work has already been partially done, but it is still trapped inside a narrower system shape.
+structured multi-agent workflow is a real capability — but the published implementations are either vendor-hosted (Devin, Copilot Workspace), single-runtime (OpenHands, Aider), general-purpose-not-coding (Goose), or non-OSI-licensed (Multica). None of them combines sovereign local execution, runtime neutrality, VCS-as-source-of-truth, live mid-task supervision, multi-model review, and a permissive OSI-approved license.
 
-What exists today is proof.
-
-What is missing is productization.
-
-That means:
+What is missing is exactly that combination. That means:
 
 - cleaner abstractions
 - local execution as the default
@@ -191,20 +164,20 @@ That means:
 - reusable workflows
 - public OSS positioning
 
-This is the point where a working internal pattern can become a real platform.
+This is the point where the structural shape of supervised autonomous coding work can become a real, sovereign, team-scale platform.
 
 ---
 
 ## The Shortest Honest Version
 
-`claude-ai` proved that structured multi-agent workflow is real.`
+`Structured multi-agent workflow for coding is real and worth committing to.`
 
-`Praxant is the next step: turn that workflow into a local, runtime-neutral, configurable platform for teams using commercial coding agents.`
+`Praxant is the local, runtime-neutral, configurable, sovereign-by-design platform for teams using commercial coding agents under live supervision.`
 
 ---
 
 ## Final Point
 
-Praxant is not a critique of what already works.
+Praxant is not a critique of what other systems do.
 
-It is the argument that what already works deserves a better final form.
+It is the argument that the right shape — sovereign, local, runtime-neutral, supervised, VCS-anchored, council-reviewed — has not yet been built, and is worth building.
