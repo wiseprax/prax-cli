@@ -1,12 +1,12 @@
 # References
 
-> **Purpose.** Catalog of every project Praxant studies as prior art, with the patterns we borrow, adapt, or reject explicitly named per project. Prevents vague "inspired by" framing and enforces the clean-room-Go discipline (`CLAUDE.md` → "Borrow patterns, copy no code — absolute").
+> **Purpose.** Catalog of every project WisePrax studies as prior art, with the patterns we borrow, adapt, or reject explicitly named per project. Prevents vague "inspired by" framing and enforces the clean-room-Go discipline (`CLAUDE.md` → "Borrow patterns, copy no code — absolute").
 > **Status.** v1, designed for iteration. Add new files as the landscape moves. The single comparative artifact is `COMPARISON.md` — extend it whenever you add a project.
 
 ## How to read this directory
 
-- **`COMPARISON.md`** — the single comparative document. Matrix of all projects across 8 discriminating axes, plus the "why Praxant is special" argument. Start here if you want the headline.
-- **Per-project files** — one document per project (or per category for tightly related projects). Each has the same shape: license + stack + patterns to borrow + patterns to adapt + patterns to reject + why-Praxant-is-different.
+- **`COMPARISON.md`** — the single comparative document. Matrix of all projects across 8 discriminating axes, plus the "why WisePrax is special" argument. Start here if you want the headline.
+- **Per-project files** — one document per project (or per category for tightly related projects). Each has the same shape: license + stack + patterns to borrow + patterns to adapt + patterns to reject + why-WisePrax-is-different.
 
 ## Index
 
@@ -37,14 +37,14 @@
 
 | File | Contents |
 |---|---|
-| [COMPARISON.md](COMPARISON.md) | 8-axis matrix across all projects + "why Praxant is special" + honest weaknesses + extension instructions. |
+| [COMPARISON.md](COMPARISON.md) | 8-axis matrix across all projects + "why WisePrax is special" + honest weaknesses + extension instructions. |
 
 ## Discipline reminders
 
 - **No source code is copied** — not snippets, not utilities, not "just a few lines." Patterns only.
-- **Cite specifically.** When a Praxant design decision borrows from a reference, name the project and the specific pattern. Avoid vague "inspired by."
+- **Cite specifically.** When a WisePrax design decision borrows from a reference, name the project and the specific pattern. Avoid vague "inspired by."
 - **License posture matters.** Apache 2.0 / MIT / Mozilla → safe to study. AGPL → patterns only, never copy. "Modified Apache" or custom carve-outs → assume incompatible until verified; document the verification in `project-specs.md` §11.
-- **Convergent design is reassuring, not threatening.** When Praxant and another project independently arrive at the same primitive (e.g., short-lived per-run tokens), that's evidence the primitive is right, not evidence of overlap.
+- **Convergent design is reassuring, not threatening.** When WisePrax and another project independently arrive at the same primitive (e.g., short-lived per-run tokens), that's evidence the primitive is right, not evidence of overlap.
 
 ## Cross-references
 

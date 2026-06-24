@@ -25,7 +25,7 @@ A Node.js + React platform that orchestrates AI agents to "run a business" — o
 - Activity & Events
 - Company Portability
 
-## Genuine overlap with Praxant
+## Genuine overlap with WisePrax
 
 | Dimension | Both ship |
 |---|---|
@@ -37,7 +37,7 @@ A Node.js + React platform that orchestrates AI agents to "run a business" — o
 | Task-manager-shaped surface | ✓ |
 | OSI-approved permissive license | ✓ |
 
-## Where they diverge (Praxant's wedge holds)
+## Where they diverge (WisePrax's wedge holds)
 
 These are documentation absences in Paperclip's published README, not refuted claims — the underlying code may have more than the README states.
 
@@ -56,17 +56,17 @@ These are documentation absences in Paperclip's published README, not refuted cl
 - **"Looks like a task manager" UX framing** — counterpoint when refining SP-8's kanban shape.
 
 ### Adapt
-- **Plugin / adapter registry pattern** — useful for VCS, Chat, Agent, Model, Secret adapters in Praxant, but Praxant's adapters are server-side interfaces in Go, not Node plugins.
+- **Plugin / adapter registry pattern** — useful for VCS, Chat, Agent, Model, Secret adapters in WisePrax, but WisePrax's adapters are server-side interfaces in Go, not Node plugins.
 
 ### Reject
-- **"Zero-human companies" framing** — Praxant explicitly keeps a human in the loop (configurable policy, never assumed). The framing also implies broader scope than coding.
-- **Org-chart-as-primary-abstraction** — Praxant's primary abstraction is the *task* in the user's VCS, not a hierarchical org chart.
+- **"Zero-human companies" framing** — WisePrax explicitly keeps a human in the loop (configurable policy, never assumed). The framing also implies broader scope than coding.
+- **Org-chart-as-primary-abstraction** — WisePrax's primary abstraction is the *task* in the user's VCS, not a hierarchical org chart.
 
 ## Honest caveats
 
 - The "64.4k stars" figure WebFetch returned is suspicious for a project on `v2026.428.0` — treated as unverified.
 - This analysis is a one-pass README read, not a code review. Several "not stated" items may exist in the codebase.
 
-## Why Praxant isn't redundant against Paperclip
+## Why WisePrax isn't redundant against Paperclip
 
-Different product shape. Paperclip = *"run a business with agents."* Praxant = *"ship code with supervised coding agents; your VCS owns the truth."* Paperclip's surface area is broad (governance, budgets, org charts); Praxant's is narrow (coding agents under live supervision with a multi-model review council and a configurable workflow engine). Convergence on heartbeat-style dispatch and short-lived JWTs is reassuring, not threatening — it means independent designs are landing on the same primitives.
+Different product shape. Paperclip = *"run a business with agents."* WisePrax = *"ship code with supervised coding agents; your VCS owns the truth."* Paperclip's surface area is broad (governance, budgets, org charts); WisePrax's is narrow (coding agents under live supervision with a multi-model review council and a configurable workflow engine). Convergence on heartbeat-style dispatch and short-lived JWTs is reassuring, not threatening — it means independent designs are landing on the same primitives.

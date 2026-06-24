@@ -1,18 +1,18 @@
 # Launch Posts
 
-This file contains launch copy for Praxant across the highest-signal developer channels.
+This file contains launch copy for WisePrax across the highest-signal developer channels.
 
 Core positioning to keep consistent:
 
-- Praxant is local agent orchestration
+- WisePrax is local agent orchestration
 - Agents run on your machine
 - Commercial AI runtimes/providers remain external
-- Praxant wraps official tools instead of replacing or impersonating them
+- WisePrax wraps official tools instead of replacing or impersonating them
 - The value is control, workflow, and vendor neutrality
 
 ## One-Line Description
 
-Praxant is a local orchestration layer for autonomous coding agents, built for teams that want agent execution under their control while using commercial AI runtimes like Claude Code, Codex, Kimi, Qwen, and DeepSeek through a wrapper-style workflow.
+WisePrax is a local orchestration layer for autonomous coding agents, built for teams that want agent execution under their control while using commercial AI runtimes like Claude Code, Codex, Kimi, Qwen, and DeepSeek through a wrapper-style workflow.
 
 ## Tagline Options
 
@@ -26,26 +26,26 @@ Praxant is a local orchestration layer for autonomous coding agents, built for t
 
 ### Title options
 
-- Show HN: Praxant - Local orchestration for autonomous coding agents
-- Show HN: Praxant - Run coding agents locally with Claude Code, Codex, Kimi, Qwen, and DeepSeek
-- Show HN: Praxant - A local control layer for autonomous coding agents
+- Show HN: WisePrax - Local orchestration for autonomous coding agents
+- Show HN: WisePrax - Run coding agents locally with Claude Code, Codex, Kimi, Qwen, and DeepSeek
+- Show HN: WisePrax - A local control layer for autonomous coding agents
 
 ### Post body
 
 Hi HN,
 
-I am building Praxant, a local orchestration layer for autonomous coding agents.
+I am building WisePrax, a local orchestration layer for autonomous coding agents.
 
 The basic idea is simple: keep agent execution, approvals, and engineering workflow under your control on your own machine, while still using the best commercial AI runtimes and providers available today.
 
-Praxant is not a hosted copilot and not a new foundation model. It is a wrapper and control layer around tools like Claude Code, Codex, Kimi, Qwen, and DeepSeek.
+WisePrax is not a hosted copilot and not a new foundation model. It is a wrapper and control layer around tools like Claude Code, Codex, Kimi, Qwen, and DeepSeek.
 
 The problem I am trying to solve is that current agent workflows usually force one of two bad options:
 
 1. Put orchestration inside a vendor SaaS and accept lock-in.
 2. Stitch local tools together manually with scripts and no real team workflow.
 
-Praxant aims for the middle path:
+WisePrax aims for the middle path:
 
 - local agent execution
 - wrapper-style use of official commercial agent tools
@@ -70,7 +70,7 @@ Because the point is not replacing the runtime. The point is controlling workflo
 
 ### If someone says "Won't providers ban this?"
 
-The intent is the opposite of circumvention. Praxant wraps official tools and lets users authenticate and operate through supported commercial runtimes. That does not create a blanket guarantee about provider policies, but it is a much cleaner posture than pretending to be the provider or proxying hidden access through a third-party SaaS.
+The intent is the opposite of circumvention. WisePrax wraps official tools and lets users authenticate and operate through supported commercial runtimes. That does not create a blanket guarantee about provider policies, but it is a much cleaner posture than pretending to be the provider or proxying hidden access through a third-party SaaS.
 
 ### If someone says "This is not really self-hosted if models are commercial"
 
@@ -88,7 +88,7 @@ No. The better model is configurable trust. Teams should be able to decide wheth
 
 ### Short post
 
-Praxant is a local orchestration layer for autonomous coding agents.
+WisePrax is a local orchestration layer for autonomous coding agents.
 
 Run agents on your machine.
 Keep approvals and workflow under your control.
@@ -98,11 +98,11 @@ It wraps the tools. It does not try to replace them.
 
 The runtime is not the platform. Your workflow is.
 
-`praxant.ai`
+`wiseprax.ai`
 
 ### Thread
 
-1. I am building Praxant: a local orchestration layer for autonomous coding agents.
+1. I am building WisePrax: a local orchestration layer for autonomous coding agents.
 
 2. The premise is simple: agent execution should run under your control on your own machine, even if the intelligence layer comes from commercial AI runtimes like Claude Code, Codex, Kimi, Qwen, or DeepSeek.
 
@@ -110,7 +110,7 @@ The runtime is not the platform. Your workflow is.
    use a hosted SaaS and accept lock-in
    or glue local tools together with scripts
 
-4. Praxant is aimed at the middle path:
+4. WisePrax is aimed at the middle path:
    local execution
    wrapper-style integration with official tools
    provider-neutral orchestration
@@ -129,7 +129,7 @@ The runtime is not the platform. Your workflow is.
 
 Run coding agents locally. Use the best AI providers. Configure the workflow.
 
-That is the idea behind Praxant.
+That is the idea behind WisePrax.
 
 ## Reddit
 
@@ -142,11 +142,11 @@ Best-fit communities:
 
 ### r/selfhosted draft
 
-I am working on Praxant, a local orchestration layer for autonomous coding agents.
+I am working on WisePrax, a local orchestration layer for autonomous coding agents.
 
 It is not a self-hosted model stack. The agents run locally on your own machine, but they can use commercial AI runtimes/providers like Claude Code, Codex, Kimi, Qwen, and DeepSeek.
 
-The important detail is that Praxant is meant to wrap those tools in a controlled workflow, not bypass them.
+The important detail is that WisePrax is meant to wrap those tools in a controlled workflow, not bypass them.
 
 The reason I am building it is that I want the workflow layer to stay under developer control:
 
@@ -161,7 +161,7 @@ What would you want from a serious local orchestration layer for coding agents?
 
 ### r/programming draft
 
-I am building Praxant, a local control layer for autonomous coding agents.
+I am building WisePrax, a local control layer for autonomous coding agents.
 
 The aim is to separate orchestration from the model vendor:
 
@@ -180,15 +180,15 @@ Lobsters responds better to concise and technical framing.
 
 ### Title
 
-Praxant: local orchestration for autonomous coding agents
+WisePrax: local orchestration for autonomous coding agents
 
 ### Body
 
-I am working on a tool called Praxant.
+I am working on a tool called WisePrax.
 
 The goal is to keep agent execution and workflow local while allowing the underlying intelligence to come from commercial coding runtimes like Claude Code, Codex, Kimi, Qwen, or DeepSeek.
 
-In other words: local control over orchestration, external providers for model capability, with Praxant acting as the wrapper around official tools rather than a replacement for them.
+In other words: local control over orchestration, external providers for model capability, with WisePrax acting as the wrapper around official tools rather than a replacement for them.
 
 The motivation is to avoid tying engineering workflow too tightly to one hosted vendor product.
 
@@ -196,11 +196,11 @@ Still early, but feedback on the architecture and positioning would be useful.
 
 ## LinkedIn
 
-Praxant is a new project focused on local orchestration for autonomous coding agents.
+WisePrax is a new project focused on local orchestration for autonomous coding agents.
 
 The idea is straightforward: teams should be able to run agent execution under their own control while still leveraging the strongest commercial AI runtimes and providers available.
 
-Instead of treating one model vendor as the whole platform, Praxant treats AI runtimes as replaceable components behind a stable workflow layer.
+Instead of treating one model vendor as the whole platform, WisePrax treats AI runtimes as replaceable components behind a stable workflow layer.
 
 It is also designed as a wrapper around official commercial tools, which is important both ergonomically and from a provider-relationship standpoint.
 
@@ -231,7 +231,7 @@ Wrapper-based local orchestration for commercial coding agents and AI runtimes.
 
 ### Option 1
 
-Praxant
+WisePrax
 
 Local orchestration for autonomous coding agents
 
@@ -239,7 +239,7 @@ Run agents on your machine. Use the best AI providers. Wrap official tools. Conf
 
 ### Option 2
 
-Praxant
+WisePrax
 
 Autonomous coding agents under your control
 
@@ -249,7 +249,7 @@ Let one agent implement, others review, and policy decide what happens next.
 
 ### Option 3
 
-Praxant
+WisePrax
 
 The control layer for coding agents
 
@@ -257,7 +257,7 @@ Keep execution local. Keep workflow stable. Keep your provider options open.
 
 ## Launch Notes
 
-- Do not call Praxant a fully self-hosted AI platform.
+- Do not call WisePrax a fully self-hosted AI platform.
 - Do not claim model sovereignty if you depend on commercial providers.
 - Do not claim immunity from provider enforcement; say the architecture is aligned around wrapping official tools, not bypassing them.
 - Emphasize local control, workflow ownership, and provider neutrality.

@@ -1,4 +1,4 @@
-# Why Praxant
+# Why WisePrax
 
 This document is the short version.
 
@@ -19,7 +19,7 @@ Today, teams usually end up in one of two unsatisfying positions:
 - use a vendor-hosted product and give up control of execution and workflow
 - use raw agent tools locally and build the process around ad hoc scripts, habits, and manual supervision
 
-Praxant exists to solve that gap.
+WisePrax exists to solve that gap.
 
 It is not trying to replace Claude Code, Codex, Kimi, Qwen, DeepSeek, or any other strong commercial tool.
 
@@ -29,7 +29,7 @@ It is trying to become the orchestration layer around them.
 
 ## The Design Principles That Hold
 
-The structural shape of agent work that Praxant commits to is clear:
+The structural shape of agent work that WisePrax commits to is clear:
 
 - agent roles are useful — different phases need different behaviors and permissions
 - visible workflow beats invisible prompting — what an agent is doing should be inspectable
@@ -38,7 +38,7 @@ The structural shape of agent work that Praxant commits to is clear:
 - deterministic rules belong in code — gates, automation policy, escalation are not prompt content
 - repo-native coordination wins — issues, PRs, comments, and labels are the right substrate
 
-These are Praxant's design commitments. Each of them rules out a class of common implementation shapes.
+These are WisePrax's design commitments. Each of them rules out a class of common implementation shapes.
 
 ---
 
@@ -79,21 +79,21 @@ It should not be the primary home of agent execution.
 
 ## Why This Is More Than A Pile Of Borrowed Parts
 
-Praxant should not be thought of as a pile of borrowed parts.
+WisePrax should not be thought of as a pile of borrowed parts.
 
-The broader autonomous-agent OSS ecosystem (Multica, OpenHands, Aider, Cline, FrankClaw, Paperclip, Goose) supplies architectural patterns for orchestration, container isolation, multi-CLI dispatch, and agent UX. None of those projects assembles those patterns the way Praxant does, and none of them combines them with: VCS-as-source-of-truth, configurable workflow engine, multi-model review council, live mid-task message-bus supervision, two-tier secrets brokered through OpenBao, and a strict substrate-not-behavior boundary.
+The broader autonomous-agent OSS ecosystem (Multica, OpenHands, Aider, Cline, FrankClaw, Paperclip, Goose) supplies architectural patterns for orchestration, container isolation, multi-CLI dispatch, and agent UX. None of those projects assembles those patterns the way WisePrax does, and none of them combines them with: VCS-as-source-of-truth, configurable workflow engine, multi-model review council, live mid-task message-bus supervision, two-tier secrets brokered through OpenBao, and a strict substrate-not-behavior boundary.
 
 The product opportunity is in the synthesis — and in the specific stances none of those references take.
 
-Praxant is a **clean-room implementation in Go**. It studies prior systems for what works and writes its own code. **No source code is forked from any of those references.** Multica was briefly considered as a fork base, but its "modified Apache 2.0" license — commercial-use carve-outs, anti-rebrand clauses, unilateral-relicensing rights — is incompatible with Praxant's Apache 2.0 commitment, sovereign-tech positioning, and grant-funding strategy.
+WisePrax is a **clean-room implementation in Go**. It studies prior systems for what works and writes its own code. **No source code is forked from any of those references.** Multica was briefly considered as a fork base, but its "modified Apache 2.0" license — commercial-use carve-outs, anti-rebrand clauses, unilateral-relicensing rights — is incompatible with WisePrax's Apache 2.0 commitment, sovereign-tech positioning, and grant-funding strategy.
 
 With the execution model made explicitly local-first, the abstractions generalized, and the implementation written cleanly under a permissive OSI-approved license, there is a real platform here that the rest of the ecosystem has not produced.
 
 ---
 
-## What Praxant Stands For
+## What WisePrax Stands For
 
-Praxant commits to the proven structural elements of agent work:
+WisePrax commits to the proven structural elements of agent work:
 
 - role specialization
 - visible workflow
@@ -113,7 +113,7 @@ And it makes the assumptions around them explicit, where the broader field tends
 
 ## What The Product Should Stand For
 
-Praxant should stand for five things:
+WisePrax should stand for five things:
 
 ### 1. Local control
 
@@ -151,7 +151,7 @@ Nothing important should happen in the dark.
 
 ## Why This Project Is Worth Joining
 
-The practical reason to take Praxant seriously:
+The practical reason to take WisePrax seriously:
 
 structured multi-agent workflow is a real capability — but the published implementations are either vendor-hosted (Devin, Copilot Workspace), single-runtime (OpenHands, Aider), general-purpose-not-coding (Goose), or non-OSI-licensed (Multica). None of them combines sovereign local execution, runtime neutrality, VCS-as-source-of-truth, live mid-task supervision, multi-model review, and a permissive OSI-approved license.
 
@@ -172,12 +172,12 @@ This is the point where the structural shape of supervised autonomous coding wor
 
 `Structured multi-agent workflow for coding is real and worth committing to.`
 
-`Praxant is the local, runtime-neutral, configurable, sovereign-by-design platform for teams using commercial coding agents under live supervision.`
+`WisePrax is the local, runtime-neutral, configurable, sovereign-by-design platform for teams using commercial coding agents under live supervision.`
 
 ---
 
 ## Final Point
 
-Praxant is not a critique of what other systems do.
+WisePrax is not a critique of what other systems do.
 
 It is the argument that the right shape — sovereign, local, runtime-neutral, supervised, VCS-anchored, council-reviewed — has not yet been built, and is worth building.

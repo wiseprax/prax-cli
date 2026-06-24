@@ -1,14 +1,14 @@
-# Praxant — Threat Model
+# WisePrax — Threat Model
 
 **Status:** Foundational architecture document
-**Audience:** Contributors evaluating security-related changes; users deciding whether Praxant fits their security requirements
+**Audience:** Contributors evaluating security-related changes; users deciding whether WisePrax fits their security requirements
 **Date:** 2026-04-27
 
 ---
 
 ## 0. Why This Document Exists
 
-Praxant is a developer tool that runs on a developer's own machine and orchestrates AI coding agents on behalf of that developer. Its security primitives must match the actual threats a developer's machine faces — not the threats a datacenter, a public SaaS, or a regulated enterprise system faces.
+WisePrax is a developer tool that runs on a developer's own machine and orchestrates AI coding agents on behalf of that developer. Its security primitives must match the actual threats a developer's machine faces — not the threats a datacenter, a public SaaS, or a regulated enterprise system faces.
 
 Without an explicit threat model, every contributor brings their own assumptions, and the project drifts toward whichever assumption is loudest. Common drift directions:
 
@@ -17,13 +17,13 @@ Without an explicit threat model, every contributor brings their own assumptions
 - "We should encrypt secrets in transit between local processes" (network-attacker mindset applied to localhost)
 - "We need full audit trails for every config change" (regulated-industry mindset applied to a single-user system)
 
-**These aren't wrong in their original contexts.** They are wrong for Praxant specifically. This document explains why, and provides the lens through which security proposals should be evaluated.
+**These aren't wrong in their original contexts.** They are wrong for WisePrax specifically. This document explains why, and provides the lens through which security proposals should be evaluated.
 
 ---
 
 ## 1. The Principle
 
-> **Praxant operates under the developer workstation threat model, not the enterprise datacenter threat model.**
+> **WisePrax operates under the developer workstation threat model, not the enterprise datacenter threat model.**
 >
 > Security primitives must align with the realistic threats a developer's machine faces (backups, snapshots, file leaks, screenshots, casual logs, shared screens) — not with enterprise compliance theater (sealed vault ceremonies, separate-host key storage, hardware HSMs, multi-party authorization).
 >
@@ -35,11 +35,11 @@ This is non-negotiable. A contributor PR titled "Improve security by requiring m
 
 ## 2. The Trust Boundary
 
-Praxant assumes a **single trusted host**: the developer's workstation, mini-PC, or homelab box where the orchestrator runs.
+WisePrax assumes a **single trusted host**: the developer's workstation, mini-PC, or homelab box where the orchestrator runs.
 
 **Inside the trust boundary:**
 
-- The Praxant orchestrator binary
+- The WisePrax orchestrator binary
 - The `praxant` CLI
 - The OpenBao container (or `.env` file, depending on configured SecretProvider)
 - The Postgres container
@@ -64,9 +64,9 @@ Praxant assumes a **single trusted host**: the developer's workstation, mini-PC,
 
 ---
 
-## 3. Realistic Threats (What Praxant Protects Against)
+## 3. Realistic Threats (What WisePrax Protects Against)
 
-These are the threats a developer's workstation actually faces in 2026, and what Praxant does about them.
+These are the threats a developer's workstation actually faces in 2026, and what WisePrax does about them.
 
 ### 3.1 Backup / snapshot / disk image leakage
 
@@ -78,11 +78,11 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** Developer accidentally commits a secret to a public or private repository.
 
-**Mitigation:** Secrets never live in any file inside a git working directory. They live in OpenBao (or the configured SecretProvider). The `.env` fallback adapter writes to `~/.praxant/secrets.env`, which is outside any project directory and trivially `.gitignore`-able if the user keeps Praxant config in a project. Praxant's CLI never prints raw secret values to stdout in normal operation.
+**Mitigation:** Secrets never live in any file inside a git working directory. They live in OpenBao (or the configured SecretProvider). The `.env` fallback adapter writes to `~/.praxant/secrets.env`, which is outside any project directory and trivially `.gitignore`-able if the user keeps WisePrax config in a project. WisePrax's CLI never prints raw secret values to stdout in normal operation.
 
 ### 3.3 Application bug logging credentials to stdout/logs
 
-**Threat:** A bug in Praxant or a praxagent causes a secret to be written to log files where it could later be exposed.
+**Threat:** A bug in WisePrax or a praxagent causes a secret to be written to log files where it could later be exposed.
 
 **Mitigation:** Secrets are passed to praxagent containers via tmpfs-mounted files (mode 0400), not environment variables. The container's environment doesn't contain raw secrets. The orchestrator's logging is structured — secret values are tagged as sensitive and never serialized. Agents that need to use a secret read it from the file path provided in env vars (e.g., `FORGEJO_TOKEN_FILE=/run/secrets/forgejo_token`), not from a `FORGEJO_TOKEN=actual-secret-value` env var.
 
@@ -90,25 +90,25 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** Developer screen-shares or screenshots their terminal/UI while secrets are visible.
 
-**Mitigation:** Secrets are never displayed in the Praxant UI. The orchestrator dashboard shows references to secret keys (e.g., "Using anthropic.oauth_token from OpenBao") but never the values themselves. CLI commands like `praxant secrets list` show keys and metadata only, never values. To inspect a value, the user must explicitly run `praxant secrets show <key> --reveal`, which prints to stdout with a clear warning.
+**Mitigation:** Secrets are never displayed in the WisePrax UI. The orchestrator dashboard shows references to secret keys (e.g., "Using anthropic.oauth_token from OpenBao") but never the values themselves. CLI commands like `praxant secrets list` show keys and metadata only, never values. To inspect a value, the user must explicitly run `praxant secrets show <key> --reveal`, which prints to stdout with a clear warning.
 
 ### 3.5 Stolen laptop with disk-encryption defeated
 
 **Threat:** Laptop is stolen and the attacker bypasses full-disk encryption.
 
-**Mitigation:** Partial. OpenBao encryption-at-rest provides a second layer. The unseal key (if stored on the same disk) is also accessible to the attacker, so this scenario degrades to "attacker has root on the machine" — at which point all bets are off (see §4.1). For developers in high-threat environments where this scenario matters, the recommended mitigation is **full-disk encryption with a strong passphrase** at the OS layer, not Praxant-specific hardening.
+**Mitigation:** Partial. OpenBao encryption-at-rest provides a second layer. The unseal key (if stored on the same disk) is also accessible to the attacker, so this scenario degrades to "attacker has root on the machine" — at which point all bets are off (see §4.1). For developers in high-threat environments where this scenario matters, the recommended mitigation is **full-disk encryption with a strong passphrase** at the OS layer, not WisePrax-specific hardening.
 
 ### 3.6 Shared multi-user machine (low likelihood for the target audience)
 
-**Threat:** Multiple users with separate accounts share the same physical machine; one user attempts to read another user's Praxant secrets.
+**Threat:** Multiple users with separate accounts share the same physical machine; one user attempts to read another user's WisePrax secrets.
 
 **Mitigation:** OpenBao runs as a Docker container owned by the user who started it. Filesystem permissions on the data directory and unseal key are 0400/0700 owned by the relevant user. A second user without root cannot read these files. (A second user WITH root can read everything; see §4.1.)
 
 ### 3.7 Network-listener attack against localhost services
 
-**Threat:** Another process on the same machine listens on a port and intercepts credentials in transit between Praxant components.
+**Threat:** Another process on the same machine listens on a port and intercepts credentials in transit between WisePrax components.
 
-**Mitigation:** Praxant components communicate over Docker network (which isolates from non-Docker host processes) and Unix sockets where possible. The Postgres container only accepts connections from inside the praxant Docker network by default. The OpenBao container similarly. Inter-container communication does not require additional encryption because the trust boundary already includes the host.
+**Mitigation:** WisePrax components communicate over Docker network (which isolates from non-Docker host processes) and Unix sockets where possible. The Postgres container only accepts connections from inside the praxant Docker network by default. The OpenBao container similarly. Inter-container communication does not require additional encryption because the trust boundary already includes the host.
 
 ### 3.8 Compromised AI provider returning malicious responses
 
@@ -120,23 +120,23 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** The VCS server is compromised; attacker pushes malicious commits or modifies issues.
 
-**Mitigation:** Praxant treats the VCS as authoritative for source code but not for execution policy. Praxagents only run when explicitly allowed by automation policy after webhook/event intake. A malicious commit doesn't automatically get universal authority. Push access is gated by the developer's own VCS credentials, not Praxant's. Praxant cannot make the VCS more or less compromised than it would be without Praxant — the attack surface is the developer's repo, not Praxant.
+**Mitigation:** WisePrax treats the VCS as authoritative for source code but not for execution policy. Praxagents only run when explicitly allowed by automation policy after webhook/event intake. A malicious commit doesn't automatically get universal authority. Push access is gated by the developer's own VCS credentials, not WisePrax's. WisePrax cannot make the VCS more or less compromised than it would be without WisePrax — the attack surface is the developer's repo, not WisePrax.
 
 ### 3.10 Anthropic / OAuth token expiration without backup
 
 **Threat:** The CLAUDE_CODE_OAUTH_TOKEN expires; if the developer hasn't backed it up, agents stop working until re-auth.
 
-**Mitigation:** Praxant tracks token expiration and warns 30 days before expiry via Mattermost notification + dashboard banner. Tokens are stored in OpenBao with replication-friendly export options. The `praxant auth refresh <provider>` command provides a smooth re-auth flow.
+**Mitigation:** WisePrax tracks token expiration and warns 30 days before expiry via Mattermost notification + dashboard banner. Tokens are stored in OpenBao with replication-friendly export options. The `praxant auth refresh <provider>` command provides a smooth re-auth flow.
 
 ---
 
-## 4. Threats Praxant Explicitly Does NOT Protect Against
+## 4. Threats WisePrax Explicitly Does NOT Protect Against
 
-Being explicit about what's out of scope is more honest than vague disclaimers. If any of these threats are in your real model, **deploy Praxant differently or use a different tool**.
+Being explicit about what's out of scope is more honest than vague disclaimers. If any of these threats are in your real model, **deploy WisePrax differently or use a different tool**.
 
 ### 4.1 Attacker with root access on the host
 
-If an attacker has root or full user-account access on the machine where Praxant runs, they have:
+If an attacker has root or full user-account access on the machine where WisePrax runs, they have:
 
 - Your SSH private keys
 - Your browser cookies (every site you're logged into)
@@ -147,28 +147,28 @@ If an attacker has root or full user-account access on the machine where Praxant
 - Your shell history (every command you've ever run)
 - Your `~/.config/` directory (everything)
 
-In this scenario, Praxant secrets being "extra-protected" is meaningless — the attacker already owns your digital identity. **No realistic Praxant security feature can change this.** Manual vault unseal, hardware HSMs, multi-party authorization — all defeated by an attacker who can keylog your unseal ceremony.
+In this scenario, WisePrax secrets being "extra-protected" is meaningless — the attacker already owns your digital identity. **No realistic WisePrax security feature can change this.** Manual vault unseal, hardware HSMs, multi-party authorization — all defeated by an attacker who can keylog your unseal ceremony.
 
-The correct mitigation is at the layer below: full-disk encryption, OS hardening, physical security, not running untrusted code as your user account, and so on. **These are out of scope for Praxant.**
+The correct mitigation is at the layer below: full-disk encryption, OS hardening, physical security, not running untrusted code as your user account, and so on. **These are out of scope for WisePrax.**
 
 ### 4.2 Insider threat from co-maintainers or contributors
 
-Praxant is OSS. Contributors can submit PRs that, if merged, could include backdoors or data-exfiltration code. Praxant does not technically prevent this. Mitigation is **process**: code review, contribution guidelines, signed commits (DCO), reproducible builds, eventually a security-focused code-of-conduct. These are out of scope for technical threat-model purposes; see CONTRIBUTING.md and SECURITY.md instead.
+WisePrax is OSS. Contributors can submit PRs that, if merged, could include backdoors or data-exfiltration code. WisePrax does not technically prevent this. Mitigation is **process**: code review, contribution guidelines, signed commits (DCO), reproducible builds, eventually a security-focused code-of-conduct. These are out of scope for technical threat-model purposes; see CONTRIBUTING.md and SECURITY.md instead.
 
 ### 4.3 Supply-chain attacks against dependencies
 
-If a Go module, Python package, npm package, or Docker base image used by Praxant is compromised upstream, Praxant inherits the compromise. Mitigation:
+If a Go module, Python package, npm package, or Docker base image used by WisePrax is compromised upstream, WisePrax inherits the compromise. Mitigation:
 
 - Pin all dependencies to specific versions (no `:latest`, no floating versions)
 - Verify checksums where supported (`go.sum`, `package-lock.json`, `Pipfile.lock`)
 - Periodic audit of transitive dependencies
 - Minimal dependency surface (don't pull in libraries we don't need)
 
-But Praxant cannot guarantee its dependencies are not compromised. **No tool can.** This is a project-wide concern shared with every modern software project.
+But WisePrax cannot guarantee its dependencies are not compromised. **No tool can.** This is a project-wide concern shared with every modern software project.
 
 ### 4.4 Compliance-grade audit logging
 
-Praxant logs operationally relevant events but does not produce SOC2/HIPAA/PCI-DSS-grade tamper-evident audit trails. If you need:
+WisePrax logs operationally relevant events but does not produce SOC2/HIPAA/PCI-DSS-grade tamper-evident audit trails. If you need:
 
 - Cryptographically signed audit logs
 - Append-only log storage
@@ -176,15 +176,15 @@ Praxant logs operationally relevant events but does not produce SOC2/HIPAA/PCI-D
 - Multi-party authorization workflows
 - Separation-of-duties enforcement
 
-— Praxant is not the right tool. Use a regulated-industry-grade orchestrator (typically commercial, often cloud-only) instead.
+— WisePrax is not the right tool. Use a regulated-industry-grade orchestrator (typically commercial, often cloud-only) instead.
 
 ### 4.5 Multi-tenant isolation
 
-Praxant assumes a single user (or single trusted team) per deployment. It does not provide isolation between tenants on the same Praxant instance. If you need to run "Praxant as a service" for multiple unrelated organizations, deploy separate Praxant instances per tenant — do not multi-tenant them.
+WisePrax assumes a single user (or single trusted team) per deployment. It does not provide isolation between tenants on the same WisePrax instance. If you need to run "WisePrax as a service" for multiple unrelated organizations, deploy separate WisePrax instances per tenant — do not multi-tenant them.
 
 ### 4.6 Defense against quantum computers
 
-Praxant uses standard cryptography (TLS, modern symmetric ciphers, current public-key algorithms). It is not post-quantum-cryptography hardened. When the cryptographic community migrates to PQC, Praxant will follow — but ahead-of-curve PQC migration is out of scope.
+WisePrax uses standard cryptography (TLS, modern symmetric ciphers, current public-key algorithms). It is not post-quantum-cryptography hardened. When the cryptographic community migrates to PQC, WisePrax will follow — but ahead-of-curve PQC migration is out of scope.
 
 ### 4.7 Defense against state-level adversaries with physical access
 
@@ -192,7 +192,7 @@ Cold-boot attacks, RAM extraction, evil-maid attacks, hardware implants — out 
 
 ### 4.8 Defense against the developer themselves
 
-If the developer running Praxant intends to leak their own secrets, exfiltrate their own data, or run malicious code on their own machine, Praxant cannot stop them. This includes "developer ran a malicious VS Code extension that read OpenBao secrets via the `praxant` CLI" — Praxant cannot distinguish a malicious extension from a legitimate one running with the developer's permissions.
+If the developer running WisePrax intends to leak their own secrets, exfiltrate their own data, or run malicious code on their own machine, WisePrax cannot stop them. This includes "developer ran a malicious VS Code extension that read OpenBao secrets via the `praxant` CLI" — WisePrax cannot distinguish a malicious extension from a legitimate one running with the developer's permissions.
 
 ---
 
@@ -257,7 +257,7 @@ If the developer running Praxant intends to leak their own secrets, exfiltrate t
 
 ### 5.6 Automation policy gate before agent dispatch or merge
 
-**Decision:** Praxant evaluates automation policy before sensitive workflow transitions such as task dispatch and merge. Depending on configuration, that policy may require human approval, review-council consensus, deterministic quality gates, or some combination.
+**Decision:** WisePrax evaluates automation policy before sensitive workflow transitions such as task dispatch and merge. Depending on configuration, that policy may require human approval, review-council consensus, deterministic quality gates, or some combination.
 
 **Rationale:**
 
@@ -268,7 +268,7 @@ If the developer running Praxant intends to leak their own secrets, exfiltrate t
 
 This is **not** a defense against compromised humans or bad policy configuration. It is a control point for limiting autonomous-system runaway and for calibrating trust based on repository policy.
 
-### 5.7 No raw secret values in Praxant logs, UI, or CLI output
+### 5.7 No raw secret values in WisePrax logs, UI, or CLI output
 
 **Decision:** Secret values never appear in operator-visible surfaces. References are by key name (e.g., "anthropic.oauth_token") only. To see a value, explicit `praxant secrets show <key> --reveal` is required.
 
@@ -285,13 +285,13 @@ When considering a security-related PR, plugin, or feature request, walk through
 
 1. **What is the realistic threat being mitigated?** Articulate it concretely. "Hardening" is not a threat. "Defense in depth" is not a threat. "An attacker who has root on the host wants to read OpenBao secrets" is a (non-)threat — see §4.1.
 
-2. **Is the threat in scope per §3, or out of scope per §4?** If out of scope, the change does not belong in Praxant core. (It might belong in deployment documentation, in a separate hardened-deployment guide, or in a third-party plugin.)
+2. **Is the threat in scope per §3, or out of scope per §4?** If out of scope, the change does not belong in WisePrax core. (It might belong in deployment documentation, in a separate hardened-deployment guide, or in a third-party plugin.)
 
 3. **Does the proposed change add operational friction for the developer?** If yes, the friction must be justified by the realistic threat. Friction without realistic mitigation is rejected (see §1).
 
-4. **Does the change introduce enterprise-style assumptions** (compliance audit logs, multi-party authorization, distributed key ceremonies, HSM requirements)? If yes, default to "no, not in core." Praxant is not an enterprise-compliance product.
+4. **Does the change introduce enterprise-style assumptions** (compliance audit logs, multi-party authorization, distributed key ceremonies, HSM requirements)? If yes, default to "no, not in core." WisePrax is not an enterprise-compliance product.
 
-5. **Could the change be implemented as an optional plugin or alternate adapter** instead of a core requirement? If yes, that's the right shape — keep Praxant core focused on the developer-workstation threat model and let users who need more deploy plugins/alternatives.
+5. **Could the change be implemented as an optional plugin or alternate adapter** instead of a core requirement? If yes, that's the right shape — keep WisePrax core focused on the developer-workstation threat model and let users who need more deploy plugins/alternatives.
 
 A useful template for evaluating proposals:
 
@@ -299,11 +299,11 @@ A useful template for evaluating proposals:
 
 ---
 
-## 7. How Users Should Evaluate Whether Praxant Fits Their Threat Model
+## 7. How Users Should Evaluate Whether WisePrax Fits Their Threat Model
 
-If you're a developer evaluating Praxant for your own use:
+If you're a developer evaluating WisePrax for your own use:
 
-| Your situation | Praxant fit |
+| Your situation | WisePrax fit |
 |---|---|
 | Solo developer working on personal projects | ✓ Excellent fit |
 | Small team (3–10) on shared self-hosted infrastructure | ✓ Good fit |
@@ -314,7 +314,7 @@ If you're a developer evaluating Praxant for your own use:
 | Multi-tenant SaaS hosting agents for unrelated customers | ✗ Not designed for this — see §4.5. Deploy separate instances per tenant or use a different tool. |
 | Air-gapped classified environments | ⚠ Possible with extra effort; some external dependencies (model providers) require internet by default |
 
-If your situation is in the ⚠ or ✗ rows, **don't try to "harden Praxant" until it fits**. Use a tool designed for your threat model in the first place. Praxant is open-source — you can fork it and adapt — but the upstream project's scope is the developer-workstation threat model.
+If your situation is in the ⚠ or ✗ rows, **don't try to "harden WisePrax" until it fits**. Use a tool designed for your threat model in the first place. WisePrax is open-source — you can fork it and adapt — but the upstream project's scope is the developer-workstation threat model.
 
 ---
 
@@ -328,7 +328,7 @@ Out-of-scope concerns (§4) and "defense in depth" suggestions without specific 
 
 ## 9. Document Maintenance
 
-This threat model is **versioned** with the project. As Praxant evolves and the threat landscape changes, this document is updated. Significant changes require a PR with rationale, reviewed against the principle in §1.
+This threat model is **versioned** with the project. As WisePrax evolves and the threat landscape changes, this document is updated. Significant changes require a PR with rationale, reviewed against the principle in §1.
 
 The current version reflects the v1 architecture. Future versions may expand scope (e.g., add multi-tenant isolation if that becomes a v2 goal), but the core principle — developer-workstation threat model, no security theater — is intended to be permanent.
 

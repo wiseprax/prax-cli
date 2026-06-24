@@ -1,9 +1,9 @@
-# Praxant — Project Specs
+# WisePrax — Project Specs
 
-**Project name:** Praxant
-**Domain:** praxant.ai (reserved 2026-04-27)
-**GitHub organization:** [github.com/praxant-ai](https://github.com/praxant-ai) (registered 2026-04-27 — `praxant` was taken; `praxant-ai` mirrors the domain TLD)
-**Repo convention:** `github.com/praxant-ai/<product>` (e.g., `github.com/praxant-ai/praxagent` for the v1 agent orchestration product)
+**Project name:** WisePrax
+**Domain:** wiseprax.ai (reserved 2026-04-27)
+**GitHub organization:** [github.com/wiseprax](https://github.com/wiseprax) (registered 2026-04-27 — `praxant` was taken; `wiseprax` mirrors the domain TLD)
+**Repo convention:** `github.com/wiseprax/<product>` (e.g., `github.com/wiseprax/praxagent` for the v1 agent orchestration product)
 **Tagline working draft:** *"Local orchestration for autonomous coding agents."* (final tagline to be refined during SP-A)
 **Status:** Draft — pending review
 **Date:** 2026-04-27
@@ -14,7 +14,7 @@
 
 ## About the name
 
-**Praxant** is a coined word combining:
+**WisePrax** is a coined word combining:
 
 | Component | Origin | Meaning |
 |---|---|---|
@@ -31,23 +31,23 @@ The platform terminology distinguishes between:
 
 | Term | Meaning |
 |---|---|
-| **Praxant** | The platform / project / orchestration system as a whole |
-| **Praxagent** | A single agent instance running under Praxant supervision — a containerized worker with the full Praxant wrapper (Ralph Loop with caps, message bus integration, council eligibility, structured output capture) |
+| **WisePrax** | The platform / project / orchestration system as a whole |
+| **Praxagent** | A single agent instance running under WisePrax supervision — a containerized worker with the full WisePrax wrapper (Ralph Loop with caps, message bus integration, council eligibility, structured output capture) |
 | **agent runtime** | The underlying CLI being orchestrated (Claude Code, Codex, OpenCode, Gemini CLI, etc.) |
 
 The distinction matters because it captures what the platform actually adds:
 
 - A **raw Claude Code session** = an agent CLI running standalone, no supervision, no caps, no message bus
-- A **Praxagent** = the same Claude Code (or any other supported runtime) wrapped with Praxant's container isolation, iteration caps, token budgets, message-bus connectivity, and review-council participation
+- A **Praxagent** = the same Claude Code (or any other supported runtime) wrapped with WisePrax's container isolation, iteration caps, token budgets, message-bus connectivity, and review-council participation
 
 Usage in docs and conversation:
 
-- *"When a Forgejo issue is assigned to a Praxant bot, the orchestrator dispatches a praxagent in a fresh container..."*
+- *"When a Forgejo issue is assigned to a WisePrax bot, the orchestrator dispatches a praxagent in a fresh container..."*
 - *"Multiple praxagents can run in parallel (capped by the concurrency setting)."*
 - *"Each praxagent reads from the per-task message bus between iterations."*
 - *"The review council dispatches N praxagents (one per reviewer model) against the same PR."*
 
-This gives you a single noun for "the unit of execution that Praxant manages" without overloading "agent" (which already has too many meanings in 2026).
+This gives you a single noun for "the unit of execution that WisePrax manages" without overloading "agent" (which already has too many meanings in 2026).
 
 ---
 
@@ -63,7 +63,7 @@ This project draws inspiration from several existing systems but is **not derive
 
 | Reference | Role | Key takeaway |
 |---|---|---|
-| **Multica** (`github.com/multica-ai/multica`) | Inspiration for multi-CLI dispatch + Kanban + WebSocket live UI. **Studied for architectural patterns only** — Multica ships under a Dify-style "modified Apache 2.0" with commercial-use carve-out, anti-rebrand clause, and unilateral-relicensing right; the source code is not a fork base candidate and is not copied into Praxant. | Polished Kanban UI shape; their daemon-spawns-CLI worker model |
+| **Multica** (`github.com/multica-ai/multica`) | Inspiration for multi-CLI dispatch + Kanban + WebSocket live UI. **Studied for architectural patterns only** — Multica ships under a Dify-style "modified Apache 2.0" with commercial-use carve-out, anti-rebrand clause, and unilateral-relicensing right; the source code is not a fork base candidate and is not copied into WisePrax. | Polished Kanban UI shape; their daemon-spawns-CLI worker model |
 | **OpenHands** (ex-OpenDevin) | Inspiration for autonomous worker model + Docker-based agent execution. Studied for patterns only; not a fork base. | Container isolation patterns, agent UI primitives |
 | **Aider** | Inspiration for git-patch oriented workflow | Conversational PR-friendly dispatch |
 | **Cline / Roo Code** | Inspiration for VS Code-embedded approval-gated UX | Approval-gate-on-every-action pattern (not adopted as default but useful for paranoid mode) |
@@ -71,7 +71,7 @@ This project draws inspiration from several existing systems but is **not derive
 | **LiteLLM** | Inspiration for multi-provider abstraction | ~95% community-contributed providers — proves the adapter pattern scales |
 | **Terraform** | Inspiration for provider plugin architecture | Community-owned adapter ecosystem proven at scale |
 
-**Praxant design choices that align with patterns proven elsewhere** (the patterns inform shape, never source code — Praxant is a clean-room Go implementation):
+**WisePrax design choices that align with patterns proven elsewhere** (the patterns inform shape, never source code — WisePrax is a clean-room Go implementation):
 - Skills + hooks pattern as a way to encode operational knowledge per project
 - Vaultwarden as the human-managed source of truth for credentials, with OpenBao as the runtime broker
 - Forgejo + Mattermost as primary v1 VCS + chat — common in sovereign self-hosted stacks
@@ -80,10 +80,10 @@ This project draws inspiration from several existing systems but is **not derive
 - Containerized agent isolation (referenced from OpenHands)
 - Adapter / provider abstraction (referenced from LiteLLM, Terraform)
 
-**Deliberately rejected** (where the wider field tends in an approach Praxant won't):
-- CI/CD as the defining execution identity — Praxant is explicitly local-first: the developer's machine or team-controlled host is the primary home of agent execution; CI remains for validation and selected automations only.
-- Per-project guard hooks coupled to a single agent CLI — Praxant abstracts over agent runtime so guards can apply across CLIs
-- VCS lock-in (rejected from Multica, OpenHands, Sweep AI which are all GitHub-first) — Praxant abstracts over VCS providers from day one
+**Deliberately rejected** (where the wider field tends in an approach WisePrax won't):
+- CI/CD as the defining execution identity — WisePrax is explicitly local-first: the developer's machine or team-controlled host is the primary home of agent execution; CI remains for validation and selected automations only.
+- Per-project guard hooks coupled to a single agent CLI — WisePrax abstracts over agent runtime so guards can apply across CLIs
+- VCS lock-in (rejected from Multica, OpenHands, Sweep AI which are all GitHub-first) — WisePrax abstracts over VCS providers from day one
 - Tight coupling between agent dispatch and CI/CD lifecycle — CI/CD remains for stateless validation only (tests, lint, etc.)
 
 The charter exists to:
@@ -289,7 +289,7 @@ Every layer is independently replaceable:
 
 ### Working principle: substrate, not behavior
 
-Praxant is the substrate. Behavior lives in skills and agents. The praxagent is the orchestrator only — it runs whatever the wrapped skills and agents specify, and nothing more.
+WisePrax is the substrate. Behavior lives in skills and agents. The praxagent is the orchestrator only — it runs whatever the wrapped skills and agents specify, and nothing more.
 
 Owned by the platform:
 
@@ -372,7 +372,7 @@ Decisions made during the architecture brainstorm. Each is "decided" unless reop
 
 | Decision | Notes |
 |---|---|
-| Synology hosts Forgejo + Mattermost + Vaultwarden + OpenBao | Stable network-facing services on the always-on low-power box. Vaultwarden remains for human password management (already exposed); OpenBao is added as the Praxant runtime secrets broker that fetches from Vaultwarden upstream and issues short-lived tokens to agents. |
+| Synology hosts Forgejo + Mattermost + Vaultwarden + OpenBao | Stable network-facing services on the always-on low-power box. Vaultwarden remains for human password management (already exposed); OpenBao is added as the WisePrax runtime secrets broker that fetches from Vaultwarden upstream and issues short-lived tokens to agents. |
 | GPU PC hosts orchestrator + web UI + containers (LAN-only services) | All compute-heavy work on the powerful local machine |
 | Remote management via SSH port-forward | No new public attack surface; Synology can act as jump host |
 | Default-deny container egress with allowlist (Anthropic, Forgejo, package mirrors) | Single highest-leverage security control |
@@ -386,14 +386,14 @@ These must be resolved before implementation. Each is a sub-project unto itself 
 
 | Open question | Why it matters | Owner |
 |---|---|---|
-| ~~**Fork base / language / database / UI**~~ | **DECIDED 2026-04-28: clean-room Go build, no fork.** Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. Single-binary deployment. Multica's architecture is studied as inspiration but **no Multica source code is copied** — Multica's "modified Apache 2.0" license (commercial-use carve-out, anti-rebrand, unilateral-relicensing) is incompatible with Praxant's Apache 2.0 + sovereignty + grant-funding strategy. Patterns also borrowed (without code) from FrankClaw, OpenHands, ai-jail, Aider, Cline. | — |
-| ~~**Project name**~~ | **DECIDED 2026-04-27: Praxant** (domain praxant.ai reserved) | — |
+| ~~**Fork base / language / database / UI**~~ | **DECIDED 2026-04-28: clean-room Go build, no fork.** Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. Single-binary deployment. Multica's architecture is studied as inspiration but **no Multica source code is copied** — Multica's "modified Apache 2.0" license (commercial-use carve-out, anti-rebrand, unilateral-relicensing) is incompatible with WisePrax's Apache 2.0 + sovereignty + grant-funding strategy. Patterns also borrowed (without code) from FrankClaw, OpenHands, ai-jail, Aider, Cline. | — |
+| ~~**Project name**~~ | **DECIDED 2026-04-27: WisePrax** (domain wiseprax.ai reserved) | — |
 | **Initial v1 scope (MVP definition)** | Determines whether ship is in 3 weeks or 3 months. Pareto-driven: ship the 20% that delivers 80% of value. | SP-A finalization |
 | **Governance model details** | Initial: solo BDFL; transitions to core-team after first co-maintainer. SP-D defines the specific transition triggers. | SP-D |
 | **Initial agent CLI support beyond Claude Code** | Codex? OpenCode? Gemini? Or ship Claude-only first and add later? | SP-4 — Pareto says Claude-only at v0.1 |
-| **Long-runtime UX framing in user-facing positioning** | A Praxant run is a multi-actor workflow producing a reviewed, signed-off branch — not a single Claude session. Expected runtime is proportional to the workflow, not to a single agent's response time. Without explicitly setting this expectation in README / §3 / launch posts, naïve readers will benchmark Praxant against raw `claude` and conclude it is "slow." | Revisit when SP-1 produces real timing data; no urgent action until then |
+| **Long-runtime UX framing in user-facing positioning** | A WisePrax run is a multi-actor workflow producing a reviewed, signed-off branch — not a single Claude session. Expected runtime is proportional to the workflow, not to a single agent's response time. Without explicitly setting this expectation in README / §3 / launch posts, naïve readers will benchmark WisePrax against raw `claude` and conclude it is "slow." | Revisit when SP-1 produces real timing data; no urgent action until then |
 | **REST vs MCP for the skill↔engine interface** | The platform API exposes workflow transitions, projects, actor permissions, and proxied service operations to skills. REST is conventional and easy for any skill to consume; MCP fits naturally into Claude Code's tool-use model and exposes operations as model-visible tools. Choice affects how skills are written, how authorization is checked, and how the credential-proxy pattern is enforced. Probably both are supported eventually; the question is which ships first. | Settle when SP-1 design starts |
-| **Validation contracts: upfront vs JIT** | One school of practice writes the validation contract during planning *before any code* — defining "done" independently of implementation. Another school argues against upfront speccing in general (waterfall risk) and favors just-in-time specs developed during work. Both positions are defensible. Praxant's planner-skill could produce the contract *just before* the executor phase (JIT but pre-implementation) — a hybrid that captures the contract's value without freezing the spec early. | Settle as a workflow-template authoring choice once first real workflows are designed |
+| **Validation contracts: upfront vs JIT** | One school of practice writes the validation contract during planning *before any code* — defining "done" independently of implementation. Another school argues against upfront speccing in general (waterfall risk) and favors just-in-time specs developed during work. Both positions are defensible. WisePrax's planner-skill could produce the contract *just before* the executor phase (JIT but pre-implementation) — a hybrid that captures the contract's value without freezing the spec early. | Settle as a workflow-template authoring choice once first real workflows are designed |
 
 ---
 
@@ -491,7 +491,7 @@ Brief notes per sub-project. Each gets a full design document during its own bra
 
 **Decision (2026-04-28): clean-room Go implementation. No fork.**
 
-**Original 2026-04-28 decision was "Fork Multica"; reversed the same day** after reviewing Multica's `LICENSE` file. Multica ships under a Dify-style "modified Apache 2.0" with three teeth incompatible with Praxant:
+**Original 2026-04-28 decision was "Fork Multica"; reversed the same day** after reviewing Multica's `LICENSE` file. Multica ships under a Dify-style "modified Apache 2.0" with three teeth incompatible with WisePrax:
 
 1. **Commercial-use carve-out** — using Multica as a hosted service or embedding it in a commercial product requires a separate commercial license from Multica.
 2. **Anti-rebrand clause** — the LOGO and copyright information in `apps/web/` cannot be removed or modified.
@@ -499,7 +499,7 @@ Brief notes per sub-project. Each gets a full design document during its own bra
 
 This is **not OSI-approved**. A fork would inherit these terms, which conflict with:
 
-- Praxant's Apache 2.0 + DCO commitment (§3, §11) — derivative code cannot be relicensed as pure Apache 2.0.
+- WisePrax's Apache 2.0 + DCO commitment (§3, §11) — derivative code cannot be relicensed as pure Apache 2.0.
 - The sovereignty positioning (`README.md`, `WHY-PRAXANT.md`) — building a "no vendor lock-in" platform on a vendor-controlled foundation is structurally incoherent.
 - The SP-D grant-funding pathway — NLnet and Sovereign Tech Fund effectively require OSI-approved licenses.
 
@@ -522,7 +522,7 @@ The Go stack-language decision was re-evaluated independently and stands on its 
 | Candidate | What it would mean | Verdict |
 |---|---|---|
 | **Fork Multica** | Inherit "modified Apache 2.0" license; cannot relicense as Apache 2.0; sovereignty positioning broken; grant funding foreclosed; unilateral-relicensing risk on every upstream pull | **Rejected — license-incompatible.** |
-| **Fork OpenHands** | MIT license (clean), but Python ecosystem; worker-centric not orchestration-centric; significant rework needed for the multi-runtime/multi-VCS abstraction shape Praxant requires | Rejected — language and shape mismatch outweigh license cleanliness. |
+| **Fork OpenHands** | MIT license (clean), but Python ecosystem; worker-centric not orchestration-centric; significant rework needed for the multi-runtime/multi-VCS abstraction shape WisePrax requires | Rejected — language and shape mismatch outweigh license cleanliness. |
 | **Fork FrankClaw** | Domain mismatch (chat-channel-to-AI gateway, not agent orchestrator); ~70% would still need to be written | Rejected — domain mismatch. |
 | **Clean-room Go build** | No license inheritance; full freedom of design; ~5–7 weeks of foundation work | **Selected** — only path that preserves Apache 2.0 + sovereignty + grant eligibility simultaneously. The "5–7 weeks of foundation" cost is mitigated because the design decisions (state machine shape, queue model, UI shape, adapter contracts) are already settled in this charter. |
 
@@ -530,9 +530,9 @@ The Go stack-language decision was re-evaluated independently and stands on its 
 
 Stack-language decision was re-evaluated when the fork base was dropped. Go remains the right choice:
 
-| Factor | Why Go wins for Praxant |
+| Factor | Why Go wins for WisePrax |
 |---|---|
-| **Workload profile** | Praxant is plumbing — HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess capture. Hot paths are I/O, not CPU. Rust's safety/perf advantages don't bind. |
+| **Workload profile** | WisePrax is plumbing — HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess capture. Hot paths are I/O, not CPU. Rust's safety/perf advantages don't bind. |
 | **Velocity to v0.1** | Go ships the same scope materially faster (no async-coloring tax, faster iteration loops). The 9–13 week roadmap depends on Go-stack productivity. |
 | **Contributor pool** | SP-C and SP-D depend on the self-hosted-homelab and sovereign-tech contributor pool, which is overwhelmingly Go: Forgejo, Gitea, Mattermost server, OpenBao, HashiCorp Vault, Terraform, Kubernetes. |
 | **Pattern cribbing** | Forgejo / Mattermost / Vault adapters are easier to write when upstream source is Go — same idioms, same SDK shapes. |
@@ -552,7 +552,7 @@ Stack-language decision was re-evaluated when the fork base was dropped. Go rema
 
 **The architectural principle:**
 
-Borrow many patterns, copy no code. Praxant is a clean-room Go implementation under Apache 2.0 + DCO. Every line of code is written by Praxant contributors. References are studied at the architecture/README/blog-post level for *what shape works*; their source trees are not vendored, forked, or copied in part.
+Borrow many patterns, copy no code. WisePrax is a clean-room Go implementation under Apache 2.0 + DCO. Every line of code is written by WisePrax contributors. References are studied at the architecture/README/blog-post level for *what shape works*; their source trees are not vendored, forked, or copied in part.
 
 ### SP-1 — Orchestrator spine
 
@@ -681,7 +681,7 @@ sequenceDiagram
     Note over C: continues from where prior child left off
 ```
 
-The child's effective "memory" is the disk artifacts, not its model context. Praxant triggers respawn on context-window pressure rather than per workflow step. The canonical interpretation is *"one engineer in a relay team, do exactly one change then drop the context."*
+The child's effective "memory" is the disk artifacts, not its model context. WisePrax triggers respawn on context-window pressure rather than per workflow step. The canonical interpretation is *"one engineer in a relay team, do exactly one change then drop the context."*
 
 The supervisor is the long-lived addressable middleware whose absence broke an earlier experiment (CI-driven agent orchestration is fire-and-forget; agents become unreachable mid-run). The supervisor stays addressable via SP-6's message bus throughout.
 
@@ -762,23 +762,23 @@ done
 
 ### SP-9 — Secrets provider abstraction + OpenBao adapter (Vaultwarden upstream)
 
-**Two-tier secrets architecture (decided 2026-05-10).** Praxant uses a layered secrets stack designed to minimize the master secret server's exposure to agents and skills:
+**Two-tier secrets architecture (decided 2026-05-10).** WisePrax uses a layered secrets stack designed to minimize the master secret server's exposure to agents and skills:
 
 ```mermaid
 flowchart LR
     Human([Human admin]) -->|manages passwords / PATs| Vault[(Vaultwarden<br/>master source of truth<br/>on Synology)]
     Vault -->|sync / read at provisioning| OpenBao[(OpenBao<br/>runtime broker<br/>container)]
-    Orchestrator[Praxant orchestrator] -->|AppRole auth| OpenBao
+    Orchestrator[WisePrax orchestrator] -->|AppRole auth| OpenBao
     OpenBao -->|short-lived tokens issued per task| Orchestrator
     Orchestrator -->|tmpfs-mounted credential file| Container[Praxagent container]
     Container -->|never sees Vaultwarden| Vault
 ```
 
-- **Vaultwarden** stays as the human-managed master store: long-lived PATs, OAuth tokens, API keys. Already exists in many users' setups; Praxant doesn't disrupt it.
+- **Vaultwarden** stays as the human-managed master store: long-lived PATs, OAuth tokens, API keys. Already exists in many users' setups; WisePrax doesn't disrupt it.
 - **OpenBao** is the runtime broker: the orchestrator authenticates to it (AppRole preferred), receives short-lived per-task tokens, and uses them to fetch credentials. **OpenBao is what skills/agents ever see traces of**, never Vaultwarden.
 - **The seam between Vaultwarden and OpenBao** (sync mechanism — periodic pull, secret engine, manual provisioning, etc.) is an SP-9 design decision; v0.1 may start with a simple manual-sync or scheduled pull and add automation later.
 - **Why this layering:** Vaultwarden is a static-secret store and cannot issue short-lived dynamic tokens. OpenBao can. The credential-helper pattern committed in the platform-API-as-security-boundary decision (2026-05-10) needs short-lived tokens, so OpenBao is required at the runtime tier. Keeping Vaultwarden upstream means the master secrets stay where humans already manage them.
-- **Bring-up backing (relaxed-security spin-up).** The *interface* exposed to skills is fixed from day one (platform API as security boundary — skills never see raw tokens, only typed proxied operations). The *backing storage* can be phased: the very first runnable Praxant uses an in-DB encrypted credentials table (key from env) that the admin area writes to directly, sufficient for getting the spine alive end-to-end. OpenBao is plugged in as the actual backend before v0.1 ships publicly. This phasing is explicit and time-bounded: the interface contract is non-negotiable; the backing is allowed to be simple during dogfooding so we don't gate "first running task" on the full broker. Tracked as a SP-1.5 / SP-9 sequencing concern, not a permanent compromise.
+- **Bring-up backing (relaxed-security spin-up).** The *interface* exposed to skills is fixed from day one (platform API as security boundary — skills never see raw tokens, only typed proxied operations). The *backing storage* can be phased: the very first runnable WisePrax uses an in-DB encrypted credentials table (key from env) that the admin area writes to directly, sufficient for getting the spine alive end-to-end. OpenBao is plugged in as the actual backend before v0.1 ships publicly. This phasing is explicit and time-bounded: the interface contract is non-negotiable; the backing is allowed to be simple during dogfooding so we don't gate "first running task" on the full broker. Tracked as a SP-1.5 / SP-9 sequencing concern, not a permanent compromise.
 
 **Interface (provider abstraction):**
 
@@ -1066,13 +1066,13 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-04-27 | VCS + Chat + Agent + Model abstractions, depth-before-breadth | Multi-provider is the differentiator; YAGNI on adapters |
 | 2026-04-27 | License: **Apache 2.0**, contribution model: **DCO** with future-relicense notice in CONTRIBUTING.md | Apache 2.0 has the strongest historical track record for dual developer + company adoption (Kubernetes, Apache projects, Terraform-pre-BSL, LiteLLM). DCO over CLA preserves first-time contributor goodwill while maintaining relicensing optionality. AGPL+commercial dual was considered and rejected because the sponsorship/grants funding model doesn't need licensing leverage and AGPL is on do-not-use lists at most large companies. |
 | 2026-04-27 | Funding pathway: GitHub Sponsors + Open Collective day-one; NLnet grant target 3–6 months in; Sovereign Tech Fund target 6–12 months in | Sovereign-tech positioning unlocks specific grant sources that prefer permissive licensing. No VC funding (incentive misalignment with sovereignty positioning). No SaaS variant unless community asks loudly. |
-| 2026-04-27 | **Project name: Praxant** (domain `praxant.ai` reserved; GitHub org `praxant-ai` registered — `praxant` was taken on GitHub) | Coined word from Greek *praxis* (action with practical wisdom) + Latin *-ant* (one who does). Literal meaning "one who acts" — precise semantic fit for autonomous agent platform. Easy to pronounce globally (PRAK-sant, two syllables). Google search confirmed no major company collision. Avoids failure modes of all prior candidates (no electrical/industrial/religious/political/personal-name/negative-language overtones). The `-ai` suffix on the GitHub org cleanly mirrors the domain TLD. |
-| 2026-04-27 | **Agent terminology: "Praxagent"** for a single agent instance running under Praxant supervision | Distinguishes a supervised agent (containerized + Ralph Loop + message bus + council-eligible) from a raw agent CLI session. Reinforces brand identity across docs, CLI commands, and conversation. |
-| 2026-04-28 | ~~**SP-0: Fork Multica** as the orchestrator base. Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + pgvector + Next.js 16 + Docker. Single binary distribution.~~ **SUPERSEDED same day by entry below.** Original rationale preserved for history: Multica gave ~70% of what Praxant needed (multi-CLI dispatch + Kanban + WebSocket realtime + daemon model + Postgres + state machine). OpenHands rejected (Python lock-in, worker-centric not orchestration-centric). FrankClaw rejected (domain mismatch — chat gateway, not agent orchestrator). Build-from-scratch rejected (5–7 weeks of foundation we'd reinvent). |
-| 2026-04-28 (revised) | **SP-0 reversal: drop the Multica fork. Clean-room Go implementation instead.** Tech stack unchanged in spirit: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. **No source code is copied from Multica or any other reference.** pgvector demoted from "locked" to "on-demand, not v0.1" since the original justification was inheritance from Multica. | Multica ships under a Dify-style "modified Apache 2.0" with (a) commercial-use carve-out requiring a separate commercial license for SaaS or embedded use, (b) anti-rebrand clause forbidding LOGO/copyright removal from the frontend (`apps/web/`), (c) unilateral-relicensing right + contributor-IP-feeds-our-cloud clause. This is **not OSI-approved**. A fork would inherit those terms, which conflict with Praxant's Apache 2.0 commitment (cannot relicense Multica-derived code as pure Apache 2.0), the sovereignty positioning (vendor-controlled foundation contradicts the brand promise), and the SP-D grant strategy (NLnet, Sovereign Tech Fund effectively require OSI-approved licenses). The 5–7 weeks of "foundation we'd reinvent" cited in the original rejection of build-from-scratch is mitigated because the design decisions are already settled in this charter — clean-room build executes against a known target rather than designing as it goes. |
-| 2026-04-28 (revised) | **Stack-language decision (Go) re-evaluated independently and stands.** Considered Rust given the "we're rewriting anyway" framing; rejected. | Praxant is plumbing (HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess) where Rust's safety/perf advantages don't bind. Go ships the same scope materially faster (no async-coloring tax). The self-hosted-tooling contributor pool is overwhelmingly Go (Forgejo, Gitea, Mattermost server, OpenBao, HashiCorp Vault, Terraform, Kubernetes), which materially helps adapter implementation, contributor onboarding, and SP-C/SP-D growth. Docker has its canonical Go SDK. Where Rust would shine (landlock/seccomp sandboxing, tiny in-container sidecars) is a SP-5 concern that doesn't bind v0.1; a Go orchestrator can shell out to a Rust helper later if needed. |
-| 2026-04-28 | **Pattern-borrow from all references, copy no source code:** Multica (multi-CLI dispatch shape, Kanban UI shape, daemon-spawns-CLI model, Postgres state machine, WebSocket realtime — studied at architecture level, source not vendored), FrankClaw (security stance, audit CLI, deployment), OpenHands (worker isolation, container patterns), ai-jail (sandbox primitives on demand), Aider (diff-first, repo-map), Cline/Cursor Background (tiered approval, cost meter, spawn-from-chat) | Praxant is a clean-room Go implementation under Apache 2.0 + DCO. References inform shape; every line of code is written by Praxant contributors. |
-| 2026-04-28 | **Pareto-driven roadmap.** v0.1 ships the 20% that delivers 80% of value (single VCS adapter, single chat or web-UI approval, single agent runtime, .env secrets, basic Kanban). Every feature outside v0.1 set is explicitly NOT built until v0.1 ships and users request it. | Get to "Show HN" launch with the smallest possible Praxant that real users will adopt. Defer multi-model council, ~~OpenBao~~ (revisited 2026-05-10 — OpenBao moved into v0.1 as the runtime broker), live supervision, multiple adapters, all brainstormed features to later versions. |
+| 2026-04-27 | **Project name: WisePrax** (domain `wiseprax.ai` reserved; GitHub org `wiseprax` registered — `praxant` was taken on GitHub) | Coined word from Greek *praxis* (action with practical wisdom) + Latin *-ant* (one who does). Literal meaning "one who acts" — precise semantic fit for autonomous agent platform. Easy to pronounce globally (PRAK-sant, two syllables). Google search confirmed no major company collision. Avoids failure modes of all prior candidates (no electrical/industrial/religious/political/personal-name/negative-language overtones). The `-ai` suffix on the GitHub org cleanly mirrors the domain TLD. |
+| 2026-04-27 | **Agent terminology: "Praxagent"** for a single agent instance running under WisePrax supervision | Distinguishes a supervised agent (containerized + Ralph Loop + message bus + council-eligible) from a raw agent CLI session. Reinforces brand identity across docs, CLI commands, and conversation. |
+| 2026-04-28 | ~~**SP-0: Fork Multica** as the orchestrator base. Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + pgvector + Next.js 16 + Docker. Single binary distribution.~~ **SUPERSEDED same day by entry below.** Original rationale preserved for history: Multica gave ~70% of what WisePrax needed (multi-CLI dispatch + Kanban + WebSocket realtime + daemon model + Postgres + state machine). OpenHands rejected (Python lock-in, worker-centric not orchestration-centric). FrankClaw rejected (domain mismatch — chat gateway, not agent orchestrator). Build-from-scratch rejected (5–7 weeks of foundation we'd reinvent). |
+| 2026-04-28 (revised) | **SP-0 reversal: drop the Multica fork. Clean-room Go implementation instead.** Tech stack unchanged in spirit: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. **No source code is copied from Multica or any other reference.** pgvector demoted from "locked" to "on-demand, not v0.1" since the original justification was inheritance from Multica. | Multica ships under a Dify-style "modified Apache 2.0" with (a) commercial-use carve-out requiring a separate commercial license for SaaS or embedded use, (b) anti-rebrand clause forbidding LOGO/copyright removal from the frontend (`apps/web/`), (c) unilateral-relicensing right + contributor-IP-feeds-our-cloud clause. This is **not OSI-approved**. A fork would inherit those terms, which conflict with WisePrax's Apache 2.0 commitment (cannot relicense Multica-derived code as pure Apache 2.0), the sovereignty positioning (vendor-controlled foundation contradicts the brand promise), and the SP-D grant strategy (NLnet, Sovereign Tech Fund effectively require OSI-approved licenses). The 5–7 weeks of "foundation we'd reinvent" cited in the original rejection of build-from-scratch is mitigated because the design decisions are already settled in this charter — clean-room build executes against a known target rather than designing as it goes. |
+| 2026-04-28 (revised) | **Stack-language decision (Go) re-evaluated independently and stands.** Considered Rust given the "we're rewriting anyway" framing; rejected. | WisePrax is plumbing (HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess) where Rust's safety/perf advantages don't bind. Go ships the same scope materially faster (no async-coloring tax). The self-hosted-tooling contributor pool is overwhelmingly Go (Forgejo, Gitea, Mattermost server, OpenBao, HashiCorp Vault, Terraform, Kubernetes), which materially helps adapter implementation, contributor onboarding, and SP-C/SP-D growth. Docker has its canonical Go SDK. Where Rust would shine (landlock/seccomp sandboxing, tiny in-container sidecars) is a SP-5 concern that doesn't bind v0.1; a Go orchestrator can shell out to a Rust helper later if needed. |
+| 2026-04-28 | **Pattern-borrow from all references, copy no source code:** Multica (multi-CLI dispatch shape, Kanban UI shape, daemon-spawns-CLI model, Postgres state machine, WebSocket realtime — studied at architecture level, source not vendored), FrankClaw (security stance, audit CLI, deployment), OpenHands (worker isolation, container patterns), ai-jail (sandbox primitives on demand), Aider (diff-first, repo-map), Cline/Cursor Background (tiered approval, cost meter, spawn-from-chat) | WisePrax is a clean-room Go implementation under Apache 2.0 + DCO. References inform shape; every line of code is written by WisePrax contributors. |
+| 2026-04-28 | **Pareto-driven roadmap.** v0.1 ships the 20% that delivers 80% of value (single VCS adapter, single chat or web-UI approval, single agent runtime, .env secrets, basic Kanban). Every feature outside v0.1 set is explicitly NOT built until v0.1 ships and users request it. | Get to "Show HN" launch with the smallest possible WisePrax that real users will adopt. Defer multi-model council, ~~OpenBao~~ (revisited 2026-05-10 — OpenBao moved into v0.1 as the runtime broker), live supervision, multiple adapters, all brainstormed features to later versions. |
 | 2026-04-27 | Audience defined by persona (self-hosted dev/team avoiding US-cloud SaaS), global from day one | Persona is consistent across regions; no benefit to artificially tiering by geography |
 | 2026-04-27 | Geographic scope: Americas + Europe + Asia (Africa explicitly out of scope for now) | User direction; covers ~95% of addressable self-hosted developer market |
 | 2026-04-27 | Launch amplification audience: global self-hosted homelab community | Disproportionate signal-boost; aligned values |
@@ -1080,11 +1080,11 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-04-27 | ~~Secrets provider abstraction with Vaultwarden as first adapter; OpenBao + cloud secret managers (AWS/Azure/GCP) + SOPS + Infisical as on-demand follow-on adapters~~ **REVISED 2026-05-10 (entry below) — first adapter is OpenBao; Vaultwarden retained as upstream source of truth.** Original rationale preserved: same provider-pattern philosophy as VCS / Chat / Agent / Model; unlocks cloud-deployed users as a viable adoption tier. | Original choice driven by Vaultwarden already running on the user's Synology and being human-friendly. Reversed when the credential-helper pattern (short-lived capability tokens) was committed to in SP-9, because Vaultwarden is fundamentally a static-secret store and cannot issue short-lived dynamic tokens. |
 | 2026-04-27 | Ruthless MVP for first public release: 1 VCS, 1 chat, 1 agent, 1 model | OSS history: narrow excellent core wins over feature-complete vision |
 | 2026-04-27 | Never auto-merge — humans always make final merge decision | ToS posture + cost cap + defense in depth |
-| 2026-05-09 | **Reframe v0.1 as a pipeline toolkit, not a generic agent factory.** Primary narrative shifts from "orchestration platform for any runtime, any model, any codebase" to "self-hosted pipeline runner for coding agents." The orchestrator spine, work-tree-per-run, branch ownership, fresh-context role spawning, observability bus, and policy-as-code hook are positioned as **primitives developers compose into bespoke pipelines for their own repo**. Adapter spine is retained but de-emphasized in v0.1 messaging. | Empirical signal from practitioners building bespoke pipelines is that *generic* factories — wrap-everything-for-everyone systems — fail because codebases are too specific. What works is per-repo, per-task pipelines owned by the developer. Praxant's previous abstraction altitude was structurally identical to the failing factory pattern. The pipeline-toolkit framing matches the working pattern instead of the failing one. The spine is unchanged at the code level; only the framing and what we *promise* in v0.1 changes. |
+| 2026-05-09 | **Reframe v0.1 as a pipeline toolkit, not a generic agent factory.** Primary narrative shifts from "orchestration platform for any runtime, any model, any codebase" to "self-hosted pipeline runner for coding agents." The orchestrator spine, work-tree-per-run, branch ownership, fresh-context role spawning, observability bus, and policy-as-code hook are positioned as **primitives developers compose into bespoke pipelines for their own repo**. Adapter spine is retained but de-emphasized in v0.1 messaging. | Empirical signal from practitioners building bespoke pipelines is that *generic* factories — wrap-everything-for-everyone systems — fail because codebases are too specific. What works is per-repo, per-task pipelines owned by the developer. WisePrax's previous abstraction altitude was structurally identical to the failing factory pattern. The pipeline-toolkit framing matches the working pattern instead of the failing one. The spine is unchanged at the code level; only the framing and what we *promise* in v0.1 changes. |
 | 2026-05-09 | **Defer SP-7 (multi-model review council) to v0.2.** v0.1 ships only the simpler pattern: planner → executor → reviewer → manager roles within a single runtime, each invoked with a fresh context window. Council remains in the design but is gated behind first-user evidence that the simpler pipeline actually beats raw Claude Code. | SP-7 is the most expensive, least empirically validated feature on the roadmap. Multi-model adversarial review on coding tasks has mixed evidence in the literature; the practitioner-pipeline pattern that actually ships working code uses fresh-context single-runtime chains, not heterogeneous councils. Building SP-7 in v0.1 risks burning weeks of engineering on a feature that may not produce measurable lift over the simpler shape. Cut now, evaluate after dogfood. |
 | 2026-05-09 | **Adopt dogfood-first sequencing: SP-1 must run on this repo before SP-2 starts.** New milestone "Phase 1.5 — Self-dogfood" inserted between Phase 1 (spine) and Phase 2 (adapters & runtime). Exit criterion: the praxagent repo accepts at least one non-trivial PR generated end-to-end by Praxagent dispatched against itself. | Pre-implementation projects that skip empirical contact with their own design fail in predictable ways; the practitioners who build working pipelines do so by *building, watching them break, and correcting*. The cheapest place to learn what's wrong with the SP-1 design is on a codebase where the cost of churn is zero (this one). Discovering the design is wrong after SP-2..SP-9 is much more expensive than discovering it after SP-1. |
-| 2026-05-09 | **Kill-switch criteria added (§14).** The charter now defines explicit conditions under which Praxant is paused or wound down. | Pre-implementation projects without kill-switches drift into sunk-cost projects. Writing the criteria now (when there is nothing to defend) is much cheaper than writing them at month 8. |
-| 2026-05-09 | **"Substrate, not behavior" tenet locked into §4.** Praxant is the orchestrator only; all behavior lives in skills and agents. The platform owns supervision, control, persistence, deterministic transitions, and adapter abstractions — nothing else. Three sub-decisions made today crystallized the tenet: (a) **policy-as-code is delegated to skills/agents**, not built into the platform — refining the same-day "pipeline toolkit" entry which had listed policy-as-code among the primitives; (b) **multi-step agent flows (planner→executor→reviewer) are implemented as skills carrying step behavior plus a thin Go state machine for deterministic transitions** — there is no pipeline DSL, workflow engine, or `Pipeline` entity in SP-1; (c) **the kanban (SP-8) is the unified observability + control surface**, with label changes routed through MCP to either the git backend or the running agent (stop / pause / persist / escalate). | Three independent design questions converged on the same answer: push behavior out, keep the platform narrow. Crystallizing the tenet now prevents future feature proposals from quietly enlarging the platform's surface area against the Pareto-MVP and "wrap, don't replace" principles in CLAUDE.md. Empirical context: Marcio's earlier experiment showed CI-driven agent orchestration fails because agents become non-interactive once CI starts; agents must run inside a long-lived addressable middleware, not a fire-and-forget pipeline executor. The kanban + label-driven MCP dispatch is that middleware's interaction surface. |
+| 2026-05-09 | **Kill-switch criteria added (§14).** The charter now defines explicit conditions under which WisePrax is paused or wound down. | Pre-implementation projects without kill-switches drift into sunk-cost projects. Writing the criteria now (when there is nothing to defend) is much cheaper than writing them at month 8. |
+| 2026-05-09 | **"Substrate, not behavior" tenet locked into §4.** WisePrax is the orchestrator only; all behavior lives in skills and agents. The platform owns supervision, control, persistence, deterministic transitions, and adapter abstractions — nothing else. Three sub-decisions made today crystallized the tenet: (a) **policy-as-code is delegated to skills/agents**, not built into the platform — refining the same-day "pipeline toolkit" entry which had listed policy-as-code among the primitives; (b) **multi-step agent flows (planner→executor→reviewer) are implemented as skills carrying step behavior plus a thin Go state machine for deterministic transitions** — there is no pipeline DSL, workflow engine, or `Pipeline` entity in SP-1; (c) **the kanban (SP-8) is the unified observability + control surface**, with label changes routed through MCP to either the git backend or the running agent (stop / pause / persist / escalate). | Three independent design questions converged on the same answer: push behavior out, keep the platform narrow. Crystallizing the tenet now prevents future feature proposals from quietly enlarging the platform's surface area against the Pareto-MVP and "wrap, don't replace" principles in CLAUDE.md. Empirical context: Marcio's earlier experiment showed CI-driven agent orchestration fails because agents become non-interactive once CI starts; agents must run inside a long-lived addressable middleware, not a fire-and-forget pipeline executor. The kanban + label-driven MCP dispatch is that middleware's interaction surface. |
 | 2026-05-09 (later) | **Workflow definitions are configurable through an admin UI, persisted in Postgres; sub-clause (b) of the substrate-not-behavior entry is refined.** Workflow shape — states, transitions, actor types, and the conditions that gate transitions — is authored exclusively from an admin UI (likely folded into the kanban surface) and stored in a Postgres table. **No config files**; file-based authoring is explicitly rejected. A deterministic Go engine in the orchestrator executes whatever definition is currently in the database. **Skills act as actors**: they read current state and authorized next transitions via REST API or MCP (interface choice TBD) and pass instructions to the harness (the agent runtime, e.g., Claude Code) to do the actual work. The earlier same-day prohibition ("no pipeline DSL / no workflow definition format / no plugin registry / no `Pipeline` entity") is **withdrawn** — it was over-broad. The substrate-not-behavior tenet is preserved: the platform owns the schema, store, engine, and admin UI; skills + harness still own per-step behavior. | (a) Determinism is a property of *executing a fixed definition*, not of having no configuration — *"deterministic until the rules from the server change"* (user framing). The morning's framing conflated runtime determinism with admin-time immutability. (b) Config files are hard to maintain across teams and machines, and are error-prone — typos and missing fields are easy to introduce by hand. A schema-validated UI plus a central DB gives one authoritative copy and avoids handwritten misconfiguration. (c) The substrate concern that motivated the morning prohibition (don't let behavior creep into the platform) is still met: workflow shape is supervisory scaffold, not behavior. (d) Open question to settle when SP-1 design starts: REST API vs MCP as the interface skills use to interact with the engine. |
 | 2026-05-10 | **Four-part test for what counts as substrate added to §4.** A candidate piece of state or logic belongs in the platform only if all four hold: (1) it is project configuration (data), not behavior; (2) it is dynamic — changes during the life of the project; (3) it must be enforced team-wide — every developer and every machine sees the same authoritative copy when it changes on the server; (4) it is a poor fit for text files in the repo (typo-prone, hard to keep in sync, breaks under hand-editing). If any test fails, the thing belongs in skills, agents, or worktree artifacts — not the platform. The workflow engine itself stays minimalist: it manages workflow transitions and nothing more; "everything else is in the skills." | Sharpens the substrate-not-behavior tenet from a list of categories into an explicit, testable rule. Three independent prior decisions (policy-as-code, multi-step flows, kanban) converge on this scope discipline. The test prevents future feature proposals from quietly enlarging the platform's surface area against the Pareto-MVP and "wrap, don't replace" principles. |
 | 2026-05-10 | **Platform API as security boundary; "credentials never appear in prompt context" as the operative bar.** The platform's REST/MCP surface (interface TBD — §6) centralizes communication with downstream services. Skills make typed proxied operation calls; the platform holds tokens internally and translates calls into Forgejo / Mattermost / Vaultwarden / etc. API calls. Actor permissions (which actor type may do what) are admin-configurable from the same UI as workflow definitions. The fundamentalist bar (*"no skill can ever touch a service directly"*) is infeasible given harness shell access and is not pursued. Realistic posture is layered defense: default-deny container egress + allowlist (already in §5), short-lived capability tokens issued per workflow transition, credential-helper pattern, per-skill network namespace isolation, audit logging — specific design TBD at SP-1 / SP-9 time. | Tokens in skill context means tokens in transcripts, in logs, and in any prompt-injection payload that gets exfiltrated. Centralizing through a typed proxy keeps credentials in the orchestrator process and the secrets provider, where the developer-workstation threat model can defend them. Acknowledged-difficult-to-perfectly-enforce; treated as a north-star principle that admits graceful degradation. The *lethal trifecta* framing (untrusted tokens × internet access × sensitive data → data loss) makes the same point in different vocabulary. |
@@ -1106,7 +1106,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | Webhook signature drift between Forgejo / Gitea / GitHub causes silent failures | Medium | Medium | Per-provider HMAC verification + integration tests with real payload fixtures |
 | Concurrency cap too generous → rate-limited cascading failures | Medium | Medium | Default to N=3, raise only after observing real-world burn-down on Max 20× |
 | Clean-room rewrite slips the v0.1 timeline beyond the 9–13 week budget | Medium | Medium | Pareto-driven v0.1 scope keeps the build small (1 VCS, 1 chat, 1 agent runtime, 1 model); architectural references (Multica, OpenHands, FrankClaw) remain available as shape guidance even though no code is copied; design decisions are already settled in this charter, so the build executes against a known target |
-| A future contributor copies code from a license-incompatible reference (Multica, etc.) into Praxant | Low (with policy) | High | CONTRIBUTING.md explicitly forbids copying source from any reference; PR review checks for unattributed similarity; contributors agree via DCO that submissions are their own work |
+| A future contributor copies code from a license-incompatible reference (Multica, etc.) into WisePrax | Low (with policy) | High | CONTRIBUTING.md explicitly forbids copying source from any reference; PR review checks for unattributed similarity; contributors agree via DCO that submissions are their own work |
 | OSS launch lands flat (no users) | High | Medium | Phase 5 launch criteria explicitly include "demo video + working compose + dogfood proof"; quality > timing |
 | Maintainer burnout (solo project) | Medium | High | SP-D explicitly plans contributor pipeline and bus-factor mitigation from day one |
 | Critical bug in agent code damages production repos | Medium | High | Container isolation + git worktrees per task + default-deny network egress + never-auto-merge |
@@ -1119,7 +1119,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 
 1. **You review this charter** — read it end-to-end, mark anything wrong, missing, or aspirational. Feedback loop until the charter accurately reflects intent.
 
-2. **Brainstorm SP-A (Positioning)** — Tagline finalization + audience persona document. (Project name + license already decided: **Praxant** + Apache 2.0 + DCO.) ~1 day of focused work. Output: `docs/specs/SP-A-positioning.md`.
+2. **Brainstorm SP-A (Positioning)** — Tagline finalization + audience persona document. (Project name + license already decided: **WisePrax** + Apache 2.0 + DCO.) ~1 day of focused work. Output: `docs/specs/SP-A-positioning.md`.
 
 3. ~~**Brainstorm SP-0 (Architecture decision)**~~ — **DECIDED 2026-04-28: clean-room Go build, no fork.** Tech stack: Go + Postgres 17 + Next.js 16 + Docker. Multica is studied as architectural inspiration only; **no Multica source code is copied**. See §11 decision log for full rationale, including the license-incompatibility analysis that reversed the original same-day fork decision.
 
@@ -1147,8 +1147,8 @@ brainstorming  →  spec doc  →  writing-plans  →  implementation
 
 ## Appendix A — Glossary
 
-- **Praxant**: The platform / project / orchestration system as a whole. Coined from Greek *praxis* (action) + Latin *-ant* (one who does). Literal meaning: "one who acts."
-- **Praxagent**: A single agent instance running under Praxant supervision — a containerized worker with the full Praxant wrapper (Ralph Loop with caps, message bus integration, council eligibility, structured output capture). Distinguishes a supervised agent from a raw agent CLI session.
+- **WisePrax**: The platform / project / orchestration system as a whole. Coined from Greek *praxis* (action) + Latin *-ant* (one who does). Literal meaning: "one who acts."
+- **Praxagent**: A single agent instance running under WisePrax supervision — a containerized worker with the full WisePrax wrapper (Ralph Loop with caps, message bus integration, council eligibility, structured output capture). Distinguishes a supervised agent from a raw agent CLI session.
 - **Agent CLI / Runtime**: The underlying command-line tool that drives an AI model to do coding work (Claude Code, Codex, OpenCode, Gemini CLI, Cursor Agent, OpenClaw, Hermes, Pi). Praxagents wrap one of these.
 - **Ralph Loop**: A pattern where a long-lived **supervisor** inside a praxagent container owns the lifecycle of short-lived **child harness sessions**. Each child reads the progress file and `CLAUDE.md` from the worktree disk, runs goal-driven iterations with hard caps on iterations / tokens / wall-clock, and is killed and respawned by the supervisor when its context approaches the model's window limit. The new child rehydrates from disk artifacts and continues. The child's effective "memory" is the disk, not its model context — respawn is triggered by context-window pressure rather than per workflow step.
 - **Council pattern**: Multiple AI models (each running as its own praxagent) reviewing the same PR independently and reaching consensus or surfacing dissent.
@@ -1167,7 +1167,7 @@ Projects whose architecture / code / community we should learn from:
 | Project | What to learn from it |
 |---|---|
 | OpenHands (ex-OpenDevin) | Autonomous worker model, Docker-based agent execution, UI for live agent inspection |
-| Multica | Multi-CLI dispatch model, Kanban UI with WebSocket live updates, Go + Next.js stack. **Architectural reference only — Multica's "modified Apache 2.0" license is incompatible with Praxant; no source code is copied.** |
+| Multica | Multi-CLI dispatch model, Kanban UI with WebSocket live updates, Go + Next.js stack. **Architectural reference only — Multica's "modified Apache 2.0" license is incompatible with WisePrax; no source code is copied.** |
 | Aider | Git-patch oriented PR work, conversation-driven workflow |
 | Cline | VS Code-embedded approval-gated agent UX |
 | Sweep AI (archived) | GitHub-PR-driven autonomous dispatch (defunct but readable code) |
@@ -1186,11 +1186,11 @@ Projects whose architecture / code / community we should learn from:
 - Governance model details
 - Initial agent CLI support beyond Claude Code (Pareto says Claude-only at v0.1)
 
-**Charter file:** `/home/wellington/workspace/praxant.ai/prax-agent/project-specs.md`
+**Charter file:** `/home/wellington/workspace/wiseprax.ai/prax-agent/project-specs.md`
 
 The discussion is flushed into the charter. The architecture is now decided enough to move toward implementation. Next concrete action when ready: SP-A formal brainstorm to finalize tagline + persona docs, then begin writing the SP-1 (orchestrator spine) implementation plan with the writing-plans skill — which is when this conversation transitions from design to actual code.
 
-**Recap:** We're designing Praxant, a sovereign self-hosted AI agent orchestration platform; the project charter, threat model, ubiquitous language, and domain runbook are written and SP-0 is locked (**clean-room Go build, no Multica fork** — license incompatibility forced the same-day reversal of the original fork decision; architecture remains Multica-inspired but every line of code is written from scratch). Next: finalize SP-A tagline and persona docs, then start the SP-1 orchestrator implementation plan.
+**Recap:** We're designing WisePrax, a sovereign self-hosted AI agent orchestration platform; the project charter, threat model, ubiquitous language, and domain runbook are written and SP-0 is locked (**clean-room Go build, no Multica fork** — license incompatibility forced the same-day reversal of the original fork decision; architecture remains Multica-inspired but every line of code is written from scratch). Next: finalize SP-A tagline and persona docs, then start the SP-1 orchestrator implementation plan.
 
 ---
 

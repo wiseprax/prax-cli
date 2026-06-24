@@ -8,18 +8,18 @@
 
 ## Patterns worth borrowing
 
-- **Autonomous worker model with Docker isolation** — directly relevant to SP-5 (container runtime + Ralph Loop). OpenHands treats the container as the unit of agent execution; Praxant does the same.
+- **Autonomous worker model with Docker isolation** — directly relevant to SP-5 (container runtime + Ralph Loop). OpenHands treats the container as the unit of agent execution; WisePrax does the same.
 - **UI for live agent inspection** — terminal stream, file browser, action history. SP-8's per-task drill-down panel covers similar ground; OpenHands' implementation is worth studying as a UX reference.
 - **Tool-use action loop with explicit step boundaries** — each iteration produces an action (bash command, file edit, browser interaction) that the user can inspect and, optionally, intervene on. Aligns with SP-6 (live supervision message bus).
-- **Microagent / "system message" pattern** — composable per-task instruction bundles. Possible reference for how Praxant skills compose against a praxagent.
+- **Microagent / "system message" pattern** — composable per-task instruction bundles. Possible reference for how WisePrax skills compose against a praxagent.
 
-## Where Praxant intentionally diverges
+## Where WisePrax intentionally diverges
 
-- **Runtime neutrality.** OpenHands ships its own opinionated agent loop (their CodeAct-style controller). Praxant wraps *other* runtimes (Claude Code first, others later) rather than replacing them. The praxagent is "Claude Code under supervision," not "a new agent loop."
-- **VCS as source of truth.** OpenHands' task model is mostly in-app. Praxant's task model lives in the user's VCS (Forgejo first), and the platform is a view over it.
-- **Multi-model review council.** OpenHands runs one agent at a time; Praxant's SP-7 introduces a parallel-blind / sighted-debate council of distinct providers.
-- **Subscription-billed (not API-key-billed).** OpenHands defaults to API-key billing per provider. Praxant's v1 path uses `CLAUDE_CODE_OAUTH_TOKEN` against the Claude Max 20× subscription — fundamentally different cost shape.
-- **Default-deny container egress.** Not the OpenHands default model; explicitly in Praxant's `threat-model.md`.
+- **Runtime neutrality.** OpenHands ships its own opinionated agent loop (their CodeAct-style controller). WisePrax wraps *other* runtimes (Claude Code first, others later) rather than replacing them. The praxagent is "Claude Code under supervision," not "a new agent loop."
+- **VCS as source of truth.** OpenHands' task model is mostly in-app. WisePrax's task model lives in the user's VCS (Forgejo first), and the platform is a view over it.
+- **Multi-model review council.** OpenHands runs one agent at a time; WisePrax's SP-7 introduces a parallel-blind / sighted-debate council of distinct providers.
+- **Subscription-billed (not API-key-billed).** OpenHands defaults to API-key billing per provider. WisePrax's v1 path uses `CLAUDE_CODE_OAUTH_TOKEN` against the Claude Max 20× subscription — fundamentally different cost shape.
+- **Default-deny container egress.** Not the OpenHands default model; explicitly in WisePrax's `threat-model.md`.
 
 ## Borrow / Adapt / Reject
 
@@ -28,8 +28,8 @@
 - Live action-stream inspection UI shape.
 
 ### Adapt
-- Tool-use loop framing — Praxant adapts it as the Ralph Loop with iteration / token / wall-clock caps inside the wrapped runtime, rather than as a Praxant-owned controller.
+- Tool-use loop framing — WisePrax adapts it as the Ralph Loop with iteration / token / wall-clock caps inside the wrapped runtime, rather than as a WisePrax-owned controller.
 
 ### Reject
-- The "Praxant owns the agent loop" posture. Praxant wraps; it does not replace.
+- The "WisePrax owns the agent loop" posture. WisePrax wraps; it does not replace.
 - API-key-first billing assumption.

@@ -1,24 +1,24 @@
-# Praxant v0.1 Persona Catalog — Proposed Adjustments
+# WisePrax v0.1 Persona Catalog — Proposed Adjustments
 
-*Working note. Praxant AI team. For team review.*
+*Working note. WisePrax AI team. For team review.*
 
 ## Purpose
 
-Praxant's v0.1 persona catalog (the catalog of who can act on a task) starts from the role-based shape the team is already running with: **BA, PM, Architect, Developer, QA, Technical Writer**. That catalog works — we've validated it by use. Before we lock it into Praxant's admin UI and workflow engine, this note proposes a small number of adjustments to handle Praxant's specific architectural commitments (SP-6 live supervision, SP-7 multi-model review council, SP-1 configurable workflow).
+WisePrax's v0.1 persona catalog (the catalog of who can act on a task) starts from the role-based shape the team is already running with: **BA, PM, Architect, Developer, QA, Technical Writer**. That catalog works — we've validated it by use. Before we lock it into WisePrax's admin UI and workflow engine, this note proposes a small number of adjustments to handle WisePrax's specific architectural commitments (SP-6 live supervision, SP-7 multi-model review council, SP-1 configurable workflow).
 
 Adjustments are intentionally minimal: one rename, one split, two additions, one metadata-level tagging. Existing skills mostly carry over unchanged.
 
 ## What stays (the foundation)
 
 - **The role-based shape itself.** SDLC roles (BA, PM, Architect, Developer, QA, Technical Writer) map cleanly onto how teams already think about work. Easier to teach, easier to onboard, fits existing PR / issue conventions.
-- **The principle that personas are team-configured.** Praxant's substrate-not-behavior tenet means the catalog below is a v0.1 *default* — every team using Praxant can adjust it in the admin UI. We're shipping a working starting point, not a rigid contract.
+- **The principle that personas are team-configured.** WisePrax's substrate-not-behavior tenet means the catalog below is a v0.1 *default* — every team using WisePrax can adjust it in the admin UI. We're shipping a working starting point, not a rigid contract.
 - **Existing skill content.** Prompts, instructions, tools, and behavior inside current skills don't need to change. This is a catalog adjustment, not a skill rewrite.
 
 ## What needs adjusting (and why)
 
 ### 1. Add **Reviewer** as a distinct persona, separate from QA
 
-**Why:** SP-7 commits Praxant to a multi-model review council — round 1 blind/parallel, round 2+ sighted debate, hard cap 3 rounds. The council members evaluate *code judgment and design soundness* (is this change well-architected? does it introduce risk?). That's a different kind of work from *execution validation* (do the tests pass? does the feature behave correctly?).
+**Why:** SP-7 commits WisePrax to a multi-model review council — round 1 blind/parallel, round 2+ sighted debate, hard cap 3 rounds. The council members evaluate *code judgment and design soundness* (is this change well-architected? does it introduce risk?). That's a different kind of work from *execution validation* (do the tests pass? does the feature behave correctly?).
 
 In the current catalog these collapse into "QA." For SP-7 to work, **Reviewer needs to exist independently of QA**, and needs to be N-instance-able (Reviewer-Claude, Reviewer-GPT, Reviewer-Gemini) so the council has provider diversity.
 
@@ -38,7 +38,7 @@ The person playing PM in the team is still important. They just don't fire per-t
 
 ### 3. Add **Operator / Supervisor** as a first-class human persona
 
-**Why:** SP-6 commits Praxant to a live mid-task message bus — humans can talk to running agents without aborting them. The human on the other end is an **operator**, not the PM. They:
+**Why:** SP-6 commits WisePrax to a live mid-task message bus — humans can talk to running agents without aborting them. The human on the other end is an **operator**, not the PM. They:
 
 - Answer questions agents ask mid-task (via the MCP human-input tool)
 - Apply kanban labels for control (`praxant:pause`, `praxant:escalate-council`, `praxant:abort`, …)
@@ -49,13 +49,13 @@ This persona is missing from the current catalog. Without it, "who is the human 
 
 ### 4. Add **Approver** as a distinct authorization persona
 
-**Why:** "Who may fire the `merge` or `promote` transition?" is a policy question Praxant's configurable automation policy explicitly needs to answer. In the current catalog it's implicit — probably whoever happens to be playing PM. For real teams, merge authority and project-management authority are different roles: a release manager isn't always a PM, a senior architect with merge rights isn't always the PM, etc.
+**Why:** "Who may fire the `merge` or `promote` transition?" is a policy question WisePrax's configurable automation policy explicitly needs to answer. In the current catalog it's implicit — probably whoever happens to be playing PM. For real teams, merge authority and project-management authority are different roles: a release manager isn't always a PM, a senior architect with merge rights isn't always the PM, etc.
 
 Approver is a named persona for the team to wire to whoever holds merge / promote authority for a given project. Often distinct from PM.
 
 ### 5. Tag each persona as `agent`, `human`, or `either`
 
-**Why:** Praxant dispatch differs based on persona type. Agent personas run inside a praxagent container with a Ralph Loop and message bus. Human personas get reached via chat approval requests, kanban labels, or the MCP human-input bus. The current catalog leaves this implicit; making it explicit metadata removes ambiguity at dispatch time.
+**Why:** WisePrax dispatch differs based on persona type. Agent personas run inside a praxagent container with a Ralph Loop and message bus. Human personas get reached via chat approval requests, kanban labels, or the MCP human-input bus. The current catalog leaves this implicit; making it explicit metadata removes ambiguity at dispatch time.
 
 This isn't a new persona — it's a one-field tag on the ones we have:
 
@@ -113,7 +113,7 @@ Net: **one rename, one split, two additions** (Operator, Approver). All other co
 ## What this is not
 
 - **Not a rejection of the current shape.** The role-based foundation stays. We're refining edges, not redesigning the catalog.
-- **Not a critique of past work.** The current catalog is what made it possible to validate the workflow shape at all. The adjustments are about fitting it to Praxant's architectural commitments (council, supervision, merge policy), which weren't in scope when the original catalog was authored.
+- **Not a critique of past work.** The current catalog is what made it possible to validate the workflow shape at all. The adjustments are about fitting it to WisePrax's architectural commitments (council, supervision, merge policy), which weren't in scope when the original catalog was authored.
 - **Not a permanent shape.** This is the v0.1 *default*. Substrate-not-behavior says teams adjust in the admin UI. We're shipping a starting point.
 
 ## Open questions for the discussion

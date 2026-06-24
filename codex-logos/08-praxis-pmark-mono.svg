@@ -1,9 +1,0 @@
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Praxant — Praxis P-Mark (monochrome)">
-  <!-- Stem and bowl forming the P -->
-  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="32" y1="25" x2="32" y2="75"/>
-    <path d="M 32 25 Q 65 25 65 40 Q 65 55 32 55"/>
-  </g>
-  <!-- Pivot node (focal) -->
-  <circle cx="32" cy="55" r="5" fill="currentColor"/>
-</svg>
