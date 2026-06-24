@@ -40,7 +40,7 @@ WisePrax assumes a **single trusted host**: the developer's workstation, mini-PC
 **Inside the trust boundary:**
 
 - The WisePrax orchestrator binary
-- The `praxant` CLI
+- The `wiseprax` CLI
 - The OpenBao container (or `.env` file, depending on configured SecretProvider)
 - The Postgres container
 - Per-task praxagent containers
@@ -72,13 +72,13 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** A backup of the developer's machine ends up in insecure storage (cloud sync, lost USB drive, shared NAS, accidental upload).
 
-**Mitigation:** Secrets are stored in OpenBao with encryption at rest. A leaked backup of the OpenBao data files is useless without the unseal key. The unseal key, if stored on the same host, is a separate file (`/etc/praxant/unseal.key` mode 0400) that the user is instructed to back up separately or accept the loss.
+**Mitigation:** Secrets are stored in OpenBao with encryption at rest. A leaked backup of the OpenBao data files is useless without the unseal key. The unseal key, if stored on the same host, is a separate file (`/etc/wiseprax/unseal.key` mode 0400) that the user is instructed to back up separately or accept the loss.
 
 ### 3.2 Accidental git commit of secrets
 
 **Threat:** Developer accidentally commits a secret to a public or private repository.
 
-**Mitigation:** Secrets never live in any file inside a git working directory. They live in OpenBao (or the configured SecretProvider). The `.env` fallback adapter writes to `~/.praxant/secrets.env`, which is outside any project directory and trivially `.gitignore`-able if the user keeps WisePrax config in a project. WisePrax's CLI never prints raw secret values to stdout in normal operation.
+**Mitigation:** Secrets never live in any file inside a git working directory. They live in OpenBao (or the configured SecretProvider). The `.env` fallback adapter writes to `~/.wiseprax/secrets.env`, which is outside any project directory and trivially `.gitignore`-able if the user keeps WisePrax config in a project. WisePrax's CLI never prints raw secret values to stdout in normal operation.
 
 ### 3.3 Application bug logging credentials to stdout/logs
 
@@ -90,7 +90,7 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** Developer screen-shares or screenshots their terminal/UI while secrets are visible.
 
-**Mitigation:** Secrets are never displayed in the WisePrax UI. The orchestrator dashboard shows references to secret keys (e.g., "Using anthropic.oauth_token from OpenBao") but never the values themselves. CLI commands like `praxant secrets list` show keys and metadata only, never values. To inspect a value, the user must explicitly run `praxant secrets show <key> --reveal`, which prints to stdout with a clear warning.
+**Mitigation:** Secrets are never displayed in the WisePrax UI. The orchestrator dashboard shows references to secret keys (e.g., "Using anthropic.oauth_token from OpenBao") but never the values themselves. CLI commands like `wiseprax secrets list` show keys and metadata only, never values. To inspect a value, the user must explicitly run `wiseprax secrets show <key> --reveal`, which prints to stdout with a clear warning.
 
 ### 3.5 Stolen laptop with disk-encryption defeated
 
@@ -108,7 +108,7 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** Another process on the same machine listens on a port and intercepts credentials in transit between WisePrax components.
 
-**Mitigation:** WisePrax components communicate over Docker network (which isolates from non-Docker host processes) and Unix sockets where possible. The Postgres container only accepts connections from inside the praxant Docker network by default. The OpenBao container similarly. Inter-container communication does not require additional encryption because the trust boundary already includes the host.
+**Mitigation:** WisePrax components communicate over Docker network (which isolates from non-Docker host processes) and Unix sockets where possible. The Postgres container only accepts connections from inside the wiseprax Docker network by default. The OpenBao container similarly. Inter-container communication does not require additional encryption because the trust boundary already includes the host.
 
 ### 3.8 Compromised AI provider returning malicious responses
 
@@ -126,7 +126,7 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** The CLAUDE_CODE_OAUTH_TOKEN expires; if the developer hasn't backed it up, agents stop working until re-auth.
 
-**Mitigation:** WisePrax tracks token expiration and warns 30 days before expiry via Mattermost notification + dashboard banner. Tokens are stored in OpenBao with replication-friendly export options. The `praxant auth refresh <provider>` command provides a smooth re-auth flow.
+**Mitigation:** WisePrax tracks token expiration and warns 30 days before expiry via Mattermost notification + dashboard banner. Tokens are stored in OpenBao with replication-friendly export options. The `wiseprax auth refresh <provider>` command provides a smooth re-auth flow.
 
 ---
 
@@ -192,7 +192,7 @@ Cold-boot attacks, RAM extraction, evil-maid attacks, hardware implants — out 
 
 ### 4.8 Defense against the developer themselves
 
-If the developer running WisePrax intends to leak their own secrets, exfiltrate their own data, or run malicious code on their own machine, WisePrax cannot stop them. This includes "developer ran a malicious VS Code extension that read OpenBao secrets via the `praxant` CLI" — WisePrax cannot distinguish a malicious extension from a legitimate one running with the developer's permissions.
+If the developer running WisePrax intends to leak their own secrets, exfiltrate their own data, or run malicious code on their own machine, WisePrax cannot stop them. This includes "developer ran a malicious VS Code extension that read OpenBao secrets via the `wiseprax` CLI" — WisePrax cannot distinguish a malicious extension from a legitimate one running with the developer's permissions.
 
 ---
 
@@ -270,7 +270,7 @@ This is **not** a defense against compromised humans or bad policy configuration
 
 ### 5.7 No raw secret values in WisePrax logs, UI, or CLI output
 
-**Decision:** Secret values never appear in operator-visible surfaces. References are by key name (e.g., "anthropic.oauth_token") only. To see a value, explicit `praxant secrets show <key> --reveal` is required.
+**Decision:** Secret values never appear in operator-visible surfaces. References are by key name (e.g., "anthropic.oauth_token") only. To see a value, explicit `wiseprax secrets show <key> --reveal` is required.
 
 **Rationale:**
 

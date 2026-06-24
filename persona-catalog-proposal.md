@@ -41,7 +41,7 @@ The person playing PM in the team is still important. They just don't fire per-t
 **Why:** SP-6 commits WisePrax to a live mid-task message bus — humans can talk to running agents without aborting them. The human on the other end is an **operator**, not the PM. They:
 
 - Answer questions agents ask mid-task (via the MCP human-input tool)
-- Apply kanban labels for control (`praxant:pause`, `praxant:escalate-council`, `praxant:abort`, …)
+- Apply kanban labels for control (`wiseprax:pause`, `wiseprax:escalate-council`, `wiseprax:abort`, …)
 - Watch token / wall-clock budget burn
 - Intervene when an agent is stuck
 

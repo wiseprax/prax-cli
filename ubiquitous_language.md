@@ -129,7 +129,7 @@ WisePrax has six provider abstractions, each with a default v1 adapter and an op
 | **Single-host Docker** | WisePrax's deployment model: one host (developer workstation, mini-PC, homelab box, dedicated server) running Docker. No Kubernetes, no service mesh, no distributed orchestration. | Use when describing the deployment philosophy. Non-negotiable v1 design choice. |
 | **Orchestrator** | The long-running WisePrax daemon. Responsibilities: webhook ingest, task queue, dispatcher, concurrency control, container management, message bus pub/sub, label-driven phase routing, WebSocket UI server. | Use "orchestrator" for the daemon process. Distinct from the WisePrax CLI. |
 | **Per-task container** | An ephemeral Docker container spawned by the orchestrator for one specific task. Contains the agent runtime CLI + Ralph Loop entrypoint + role-specific tooling. Destroyed when the task completes. | Use when describing isolation or resource limits. Contrast with long-running services (Postgres, OpenBao, orchestrator itself). |
-| **Container image** | A Docker image used to spawn per-task containers. WisePrax uses a layered approach: a single fat base image (`praxant/agent-base`) with all CLIs, plus per-stack overlays (`agent-base-odoo`, `agent-base-wp`, etc.). | Use when discussing the image strategy. Per-stack overlays are added on demand. |
+| **Container image** | A Docker image used to spawn per-task containers. WisePrax uses a layered approach: a single fat base image (`wiseprax/agent-base`) with all CLIs, plus per-stack overlays (`agent-base-odoo`, `agent-base-wp`, etc.). | Use when discussing the image strategy. Per-stack overlays are added on demand. |
 | **Ralph Loop** | The iterative pattern where a praxagent runs a goal-driven prompt repeatedly, checking for completion after each iteration, with hard caps on iterations / tokens / wall-clock to prevent runaway. Named after the original "Ralph Wiggum loop" pattern. | Use when discussing the praxagent execution loop. Don't confuse with workflow phases (which are between tasks, not within one). |
 | **Iteration cap** | Maximum number of Ralph Loop iterations before a praxagent exits with a "deferred — needs human" status. Default: 50. | Use when discussing safety bounds within a task. |
 | **Concurrency cap** | Maximum number of praxagents running in parallel across the entire orchestrator. Default: 3 (sized for Anthropic Max 20×). | Use when discussing system-level limits. Distinct from iteration cap (per-task). |
@@ -181,9 +181,9 @@ These terms imply assumptions that contradict WisePrax's design. Use the suggest
 |---|---|---|
 | GitHub org | `wiseprax` | `github.com/wiseprax` |
 | Repo (v1 product) | `praxagent` | `github.com/wiseprax/praxagent` |
-| CLI binary | `praxant` | `praxant init`, `praxant secrets list`, `praxant auth refresh claude` |
-| Daemon process | `praxant-orchestrator` | systemd unit name |
-| Docker images | `praxant/<purpose>` namespace | `praxant/agent-base`, `praxant/orchestrator` |
+| CLI binary | `wiseprax` | `wiseprax init`, `wiseprax secrets list`, `wiseprax auth refresh claude` |
+| Daemon process | `wiseprax-orchestrator` | systemd unit name |
+| Docker images | `wiseprax/<purpose>` namespace | `wiseprax/agent-base`, `wiseprax/orchestrator` |
 | VCS labels (phase tracking) | `phase/<name>` | `phase/analyze`, `phase/implement`, `phase/testing` |
 | VCS labels (council outcomes) | `agents/<state>` | `agents/consensus`, `agents/dissent` |
 | VCS labels (role routing) | `agent/<role>` | `agent/backend-developer`, `agent/qa` |

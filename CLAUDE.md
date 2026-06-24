@@ -8,7 +8,7 @@ This repo is **pre-implementation**. It currently contains only design documents
 
 ## What this project is
 
-**WisePrax** is a local orchestration platform for autonomous coding agents. It wraps commercial agent runtimes (Claude Code, Codex, Kimi, Qwen, DeepSeek) instead of replacing them, and runs everything on developer-controlled hardware. The v1 product is **Praxagent** — see `README.md` for the public pitch and `why-praxant.md` for the strategic argument.
+**WisePrax** is a local orchestration platform for autonomous coding agents. It wraps commercial agent runtimes (Claude Code, Codex, Kimi, Qwen, DeepSeek) instead of replacing them, and runs everything on developer-controlled hardware. The v1 product is **Praxagent** — see `README.md` for the public pitch and `why-wiseprax.md` for the strategic argument.
 
 ## Canonical vocabulary (use these terms exactly)
 
@@ -26,12 +26,11 @@ A raw `claude` session is not a praxagent. A praxagent is the runtime *plus the 
 | File | Role |
 |---|---|
 | `README.md` | Public-facing pitch and positioning |
-| `why-praxant.md` | Strategic argument: why this project should exist |
+| `why-wiseprax.md` | Strategic argument: why this project should exist |
 | `project-specs.md` | **Project charter.** Vision, sub-project decomposition (SP-0…SP-9, SP-A…SP-D), phased roadmap, decision log. The meta-design that governs all subsequent work. |
 | `ubiquitous_language.md` | Canonical vocabulary (DDD-style). Source of truth for terms. |
 | `threat-model.md` | Security posture: developer-workstation threat model, *not* enterprise-datacenter. Reject hardening proposals that don't map to a realistic threat in §3. |
 | `references/` | Directory of studied prior art. One file per project (or category), plus `COMPARISON.md` — the single matrix + "why WisePrax is special" doc. Start with `references/README.md`. |
-| `domain-dot-com.md` | Domain acquisition guide for `praxant.com` (optional; `wiseprax.ai` is canonical). |
 | `launch-posts.md` | Drafts for HN / r/selfhosted / etc. announcement posts. |
 
 When editing these documents, keep the **decision log** in `project-specs.md` §11 in sync — any reversal of a decision belongs there with a date and rationale.
