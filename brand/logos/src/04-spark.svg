@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- WisePrax - Wise spark: rising action (praxis) + insight, squircle app icon -->
+  <rect x="28" y="28" width="200" height="200" rx="48" fill="#4F46E5"/>
+  <path d="M76 174 L128 116 L180 174" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M128 56 L136 84 L164 92 L136 100 L128 128 L120 100 L92 92 L120 84 Z" fill="#F59E0B"/>
+</svg>

@@ -160,12 +160,12 @@ Breadth comes later. The first job is to make the core solid.
 
 ## Name
 
-`WisePrax` comes from `praxis` plus the agentive `-ant`:
+`WisePrax` comes from `wise` plus `praxis`:
 
+- `wise`: sound judgment, practical wisdom, supervision
 - `praxis`: action, doing, practical work
-- `-ant`: one who acts
 
-The name fits the system because WisePrax is about agents that act inside real engineering workflows, not just assist in chat.
+The name captures what the platform contributes: it brings judgment to action. WisePrax is the control layer that supervises autonomous agents doing real engineering work — wise action under human authority, not unsupervised automation and not chat-only assistance.
 
 ## Follow The Project
 

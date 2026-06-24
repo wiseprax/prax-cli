@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- WisePrax - Orchestrator constellation: supervisor + praxagents, one active -->
+  <g stroke="#4F46E5" stroke-width="7">
+    <line x1="128" y1="128" x2="128" y2="56"/>
+    <line x1="128" y1="128" x2="200" y2="128"/>
+    <line x1="128" y1="128" x2="128" y2="200"/>
+    <line x1="128" y1="128" x2="56" y2="128"/>
+  </g>
+  <circle cx="128" cy="56" r="18" fill="#F59E0B"/>
+  <circle cx="200" cy="128" r="16" fill="#4F46E5"/>
+  <circle cx="128" cy="200" r="16" fill="#4F46E5"/>
+  <circle cx="56" cy="128" r="16" fill="#4F46E5"/>
+  <circle cx="128" cy="128" r="26" fill="#312E81"/>
+</svg>

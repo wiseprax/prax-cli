@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- WisePrax - Praxis loop: cyclic action (Ralph Loop) with supervised core -->
+  <g fill="none" stroke="#4F46E5" stroke-width="26" stroke-linecap="round">
+    <path d="M168 73 A 62 62 0 1 1 150 70"/>
+  </g>
+  <path d="M150 46 L176 70 L142 88 Z" fill="#F59E0B"/>
+  <circle cx="128" cy="132" r="22" fill="#F59E0B"/>
+</svg>

@@ -34,7 +34,7 @@ The concept comes from **Domain-Driven Design** (Eric Evans) — the *ubiquitous
 | Term | Definition | Usage notes |
 |---|---|---|
 | **WisePrax AI** | The umbrella organization behind the project. The team, the brand entity, the GitHub org (`wiseprax`), and the canonical owner of the domain `wiseprax.ai`. Distinct from WisePrax (the platform). | Use when referring to the team, the entity, governance, brand, or external positioning ("WisePrax AI team", "WisePrax AI is the umbrella for…"). |
-| **WisePrax** | The platform / project / orchestration system. Coined from Greek *praxis* (action with practical wisdom) + Latin *-ant* (one who does). Pronunciation: PRAK-sant. | Use when referring to the platform itself — the Go orchestrator, the workflow engine, the kanban app, the adapters. The product WisePrax AI builds. |
+| **WisePrax** | The platform / project / orchestration system. Coined from English *wise* + Greek *praxis* (action with practical wisdom). Pronunciation: WYZE-praks. | Use when referring to the platform itself — the Go orchestrator, the workflow engine, the kanban app, the adapters. The product WisePrax AI builds. |
 | **Praxagent** | A single agent instance running under WisePrax supervision — a containerized worker with the full WisePrax wrapper (Ralph Loop with caps, message bus integration, council eligibility, structured output capture, role config). | Use when referring to a specific running agent OR when emphasizing the difference from a raw agent CLI session. The plural is "praxagents." |
 | **wiseprax.ai** | Canonical domain. Not an identity term — just an address. | Use as URL only. Do not use "wiseprax.ai" to refer to the team or the platform; use "WisePrax AI" and "WisePrax" respectively. |
 

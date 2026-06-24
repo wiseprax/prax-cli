@@ -18,12 +18,12 @@
 
 | Component | Origin | Meaning |
 |---|---|---|
-| **Prax-** | Greek πρᾶξις (*praxis*) | Action, deed, doing — putting theory into practical work. Aristotle's term for action requiring practical wisdom (*phronesis*). |
-| **-ant** | Latin *-ans, -antem* (present participle) | "One who does X." Forms agent nouns: assistant, participant, consultant. |
+| **Wise-** | English *wise* (Old English *wīs*) | Sound judgment and discernment — a nod to Aristotle's *phronesis*, the practical wisdom that governs good action. |
+| **-Prax** | Greek πρᾶξις (*praxis*) | Action, deed, doing — putting theory into practical work. Aristotle's term for action requiring practical wisdom. |
 
-Literal meaning: **"one who acts"** — the precise function of an autonomous coding agent.
+Literal meaning: **"wise action"** — action guided by judgment, the precise function of a *supervised* autonomous coding agent.
 
-The name signals competence, action with judgment, and intellectual depth without being pretentious. It avoids the failure modes of other candidates (electrical/industrial overtones, religious/political authority connotations, negative meanings in other languages, personal-name collisions). It transliterates cleanly across major scripts, is **easy to pronounce** in any language (`PRAK-sant`, two syllables, hard consonants), and reads as "serious infrastructure" rather than "trendy startup" — matching the sovereign/durable positioning.
+The name signals competence, action with judgment, and intellectual depth without being pretentious. It pairs a plain, universally legible English word (*wise*) with the Greek root that anchors the project's philosophy of practical action under human judgment. It reads as "serious infrastructure" rather than "trendy startup" — matching the sovereign/durable positioning — and is easy to say (`WYZE-praks`, two syllables).
 
 ### Praxagent — terminology for agent instances
 
@@ -1148,7 +1148,7 @@ brainstorming  →  spec doc  →  writing-plans  →  implementation
 
 ## Appendix A — Glossary
 
-- **WisePrax**: The platform / project / orchestration system as a whole. Coined from Greek *praxis* (action) + Latin *-ant* (one who does). Literal meaning: "one who acts."
+- **WisePrax**: The platform / project / orchestration system as a whole. Coined from English *wise* + Greek *praxis* (action). Literal meaning: "wise action."
 - **Praxagent**: A single agent instance running under WisePrax supervision — a containerized worker with the full WisePrax wrapper (Ralph Loop with caps, message bus integration, council eligibility, structured output capture). Distinguishes a supervised agent from a raw agent CLI session.
 - **Agent CLI / Runtime**: The underlying command-line tool that drives an AI model to do coding work (Claude Code, Codex, OpenCode, Gemini CLI, Cursor Agent, OpenClaw, Hermes, Pi). Praxagents wrap one of these.
 - **Ralph Loop**: A pattern where a long-lived **supervisor** inside a praxagent container owns the lifecycle of short-lived **child harness sessions**. Each child reads the progress file and `CLAUDE.md` from the worktree disk, runs goal-driven iterations with hard caps on iterations / tokens / wall-clock, and is killed and respawned by the supervisor when its context approaches the model's window limit. The new child rehydrates from disk artifacts and continues. The child's effective "memory" is the disk, not its model context — respawn is triggered by context-window pressure rather than per workflow step.

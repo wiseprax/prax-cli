@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" width="640" height="180">
+  <!-- WisePrax - horizontal wordmark lockup (praxis-loop glyph + name) -->
+  <g transform="translate(20,26) scale(0.5)">
+    <g fill="none" stroke="#4F46E5" stroke-width="26" stroke-linecap="round">
+      <path d="M168 73 A 62 62 0 1 1 150 70"/>
+    </g>
+    <path d="M150 46 L176 70 L142 88 Z" fill="#F59E0B"/>
+    <circle cx="128" cy="132" r="22" fill="#F59E0B"/>
+  </g>
+  <text x="168" y="118" font-family="DejaVu Sans, Verdana, sans-serif" font-weight="700" font-size="86"><tspan fill="#312E81">Wise</tspan><tspan fill="#4F46E5">Prax</tspan></text>
+</svg>
