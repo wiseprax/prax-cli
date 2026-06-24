@@ -74,7 +74,7 @@ This project draws inspiration from several existing systems but is **not derive
 **WisePrax design choices that align with patterns proven elsewhere** (the patterns inform shape, never source code — WisePrax is a clean-room Go implementation):
 - Skills + hooks pattern as a way to encode operational knowledge per project
 - Vaultwarden as the human-managed source of truth for credentials, with OpenBao as the runtime broker
-- Forgejo + Mattermost as primary v1 VCS + chat — common in sovereign self-hosted stacks
+- Forgejo + Matrix (Tuwunel) as primary v1 VCS + chat — common in sovereign self-hosted stacks
 - Multi-CLI dispatch model (referenced from Multica)
 - Live WebSocket UI for agent progress (referenced from Multica + OpenHands)
 - Containerized agent isolation (referenced from OpenHands)
@@ -196,7 +196,7 @@ It is also an explicit attempt to productize what already works in narrower inte
 | Adapter-pattern architecture | Multi-provider support is the differentiator vs the GitHub/OpenAI-locked competition |
 | Wrapper-first runtime strategy | Work with official commercial tools rather than cloning or proxying them; preserve clean provider relationships while adding orchestration value |
 | Configurable autonomy | The platform must support human-reviewed, guarded, and policy-authorized workflows instead of enforcing one doctrine |
-| Depth before breadth | Be excellent on Forgejo + Mattermost + Claude Code first; add adapters on demand |
+| Depth before breadth | Be excellent on Forgejo + Matrix + Claude Code first; add adapters on demand |
 | Don't pre-build adapters speculatively | YAGNI — the abstraction is the strategic investment, the adapters are tactical |
 | Documented extension points | Make community contribution mechanical, not heroic |
 
@@ -213,7 +213,7 @@ Every layer is independently replaceable:
 | Agent runtime (worker) | Claude Code | Codex, OpenCode, Gemini CLI, Cursor Agent, OpenClaw, Hermes, Pi, custom |
 | AI model | Claude (subscription via OAuth token) | OpenRouter, DeepSeek, Kimi, Qwen, GLM, local Ollama |
 | VCS provider | Forgejo | GitHub, GitLab, Gitea, Bitbucket (via abstraction) |
-| Chat / approval | Mattermost | Slack, Rocket.Chat, Discord (via abstraction) |
+| Chat / approval | Matrix (Tuwunel + Element) | Mattermost, Slack, Rocket.Chat, Discord (via abstraction) |
 | Secrets provider | OpenBao | HashiCorp Vault, Vaultwarden, Infisical, SOPS, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, plain env files (via abstraction) |
 | Container runtime | Docker | Podman, containerd (no hard coupling expected) |
 | Database | PostgreSQL 17 | Locked for v1 (pgvector extension is on-demand, not in v0.1) |
@@ -246,8 +246,8 @@ Every layer is independently replaceable:
 [Ralph Loop with iteration / token / wall-clock caps]
          │
          │  bidirectional message bus (Postgres LISTEN/NOTIFY)
-         │     ◄── operator messages from Mattermost / Kanban
-         │     ──► live progress events to Kanban + Mattermost thread
+         │     ◄── operator messages from Matrix / Kanban
+         │     ──► live progress events to Kanban + Matrix thread
          │
          ▼
 [Agent commits, opens PR via VCS adapter]
@@ -280,7 +280,7 @@ Every layer is independently replaceable:
 ├─ Provider abstractions ────────────────────────────────────┤
 │  VCSProvider | ChatProvider | AgentRuntime | ModelRouter   │
 ├─ Adapters (concrete implementations) ──────────────────────┤
-│  Forgejo | Mattermost | Claude Code | OpenRouter           │
+│  Forgejo | Matrix | Claude Code | OpenRouter               │
 │  (others added on demand)                                  │
 ├─ Container runtime ────────────────────────────────────────┤
 │  Docker, per-stack images, message bus poller, Ralph Loop  │
@@ -362,7 +362,7 @@ Decisions made during the architecture brainstorm. Each is "decided" unless reop
 | Decision | Notes |
 |---|---|
 | VCS provider abstraction with first adapter = Forgejo | Webhook normalization + posting back. GitHub/GitLab/Gitea adapters added on demand |
-| Chat provider abstraction with first adapter = Mattermost | Approval, supervision, notifications |
+| Chat provider abstraction with first adapter = Matrix (Tuwunel) | Approval, supervision, notifications |
 | Emoji-reaction approval as universal primitive | Works identically across all chat platforms; per-provider "fancy" buttons added later if useful |
 | Open source from day one — **Apache 2.0** | Strategic; supports the "sovereign, portable" positioning + maximum dual adoption (developers and companies) |
 | Depth-before-breadth on adapters | Don't pre-build adapters without a real user request |
@@ -372,7 +372,7 @@ Decisions made during the architecture brainstorm. Each is "decided" unless reop
 
 | Decision | Notes |
 |---|---|
-| Synology hosts Forgejo + Mattermost + Vaultwarden + OpenBao | Stable network-facing services on the always-on low-power box. Vaultwarden remains for human password management (already exposed); OpenBao is added as the WisePrax runtime secrets broker that fetches from Vaultwarden upstream and issues short-lived tokens to agents. |
+| Synology hosts Forgejo + Tuwunel (Matrix) + Vaultwarden + OpenBao | Stable network-facing services on the always-on low-power box. Vaultwarden remains for human password management (already exposed); OpenBao is added as the WisePrax runtime secrets broker that fetches from Vaultwarden upstream and issues short-lived tokens to agents. |
 | GPU PC hosts orchestrator + web UI + containers (LAN-only services) | All compute-heavy work on the powerful local machine |
 | Remote management via SSH port-forward | No new public attack surface; Synology can act as jump host |
 | Default-deny container egress with allowlist (Anthropic, Forgejo, package mirrors) | Single highest-leverage security control |
@@ -408,7 +408,7 @@ The platform is too big for a single design or implementation plan. Nine technic
 | **SP-0** | Architecture decision | Language, stack, build approach (clean-room vs fork), MVP scope |
 | **SP-1** | Orchestrator spine | Webhook receiver, persistent queue, dispatcher, task-lifecycle state machine, concurrency semaphore, quota-aware backoff. **Configurable workflow engine** (states / transitions / actor types / conditions / task dependencies) stored in Postgres and authored from the admin UI. Skills act as actors via REST or MCP (interface TBD — §6). Platform API also serves proxied operations on downstream services so credentials never reach skill prompts (see SP-9). |
 | **SP-2** | VCS provider abstraction + Forgejo adapter | Interface + Forgejo implementation: webhook normalization, posting comments/reviews/labels, PR operations |
-| **SP-3** | Chat provider abstraction + Mattermost adapter | Interface + Mattermost implementation: post/update messages, reactions, approval gate, message bus integration |
+| **SP-3** | Chat provider abstraction + Matrix adapter | Interface + Matrix (Tuwunel) implementation: post/update messages, reactions, approval gate, message bus integration |
 | **SP-4** | Agent runtime abstraction + Claude Code worker | Interface for spawning CLI workers; Claude Code as first concrete runtime; OAuth-token auth; subprocess output capture |
 | **SP-5** | Container runtime + image strategy + Ralph Loop entrypoint | Per-stack base + overlay images, container lifecycle, Ralph Loop with iteration/token/wall-clock caps, message bus poller |
 | **SP-6** | Live supervision message bus + MCP human-input tool | Per-task Postgres LISTEN/NOTIFY channel, bidirectional human↔agent messaging, MCP tool for agent-initiated questions |
@@ -438,7 +438,7 @@ SP-A (positioning) ──> SP-0 (architecture)
                        │  │  │  │  └────────> SP-5 (containers)
                        │  │  │  └───────────> SP-9 (secrets + OpenBao broker / Vaultwarden upstream)
                        │  │  └──────────────> SP-4 (agent runtime)
-                       │  └─────────────────> SP-3 (chat + Mattermost)
+                       │  └─────────────────> SP-3 (chat + Matrix)
                        └────────────────────> SP-2 (VCS + Forgejo)
                                                │
                                                ▼
@@ -473,7 +473,7 @@ SP-B (repo bootstrap) ──> SP-C (launch) ──> SP-D (sustainability ongoing
 OSS history is consistent: projects succeed by launching with **a small core that's excellent at one thing for one audience**, then growing. We launch at end of Phase 5 with:
 
 - One VCS provider (Forgejo)
-- One chat provider (Mattermost)
+- One chat provider (Matrix — Tuwunel homeserver + Element client)
 - One agent runtime (Claude Code)
 - One model provider (Claude Max subscription)
 - Working end-to-end PR-driven autonomous workflow
@@ -608,7 +608,7 @@ list_changed_files(repo, pr_id)
 - Auth: PAT (source of truth in Vaultwarden, served at runtime via OpenBao broker — see SP-9)
 - API: largely GitHub-API-compatible; minor field-name differences
 
-### SP-3 — Chat provider abstraction + Mattermost adapter
+### SP-3 — Chat provider abstraction + Matrix adapter
 
 **Interface:**
 ```
@@ -625,11 +625,12 @@ request_approval(channel, prompt, allowed_users) -> ApprovalRef
 await_approval(ref, timeout_s) -> ApprovalResult
 ```
 
-**Mattermost specifics:**
-- Inbound: outgoing webhooks + WebSocket
-- Threading: `root_id`
-- Auth: bot account / PAT
-- Approval primitive: emoji reactions (universal across all providers)
+**Matrix specifics (Tuwunel homeserver + Element client):**
+- Inbound: Application Service transactions (`PUT /transactions/{txnId}`) + optional `/sync` long-poll
+- Threading: `m.thread` relations (`rel_type: m.thread`)
+- Auth: Application Service registration (`as_token` / `hs_token`) for the bot identity; human login via Tuwunel's built-in OIDC server (Keycloak upstream — no separate MAS)
+- Approval primitive: emoji reactions — `m.reaction` annotation events (universal across all providers)
+- Keep supervision rooms unencrypted (agents post via the appservice); reserve E2EE for human-only rooms
 
 ### SP-4 — Agent runtime abstraction + Claude Code worker
 
@@ -726,7 +727,7 @@ done
 **Backing store:** PostgreSQL `LISTEN`/`NOTIFY` per task — `task_<id>_messages` channel.
 
 **Two writers, one store:**
-- Mattermost outgoing webhook → orchestrator endpoint → `INSERT + NOTIFY`
+- Matrix Application Service transaction → orchestrator endpoint → `INSERT + NOTIFY`
 - Kanban card chat input → WebSocket → orchestrator → `INSERT + NOTIFY`
 
 **Two readers:**
@@ -735,7 +736,7 @@ done
 
 **MCP human-input tool:**
 - Local MCP server exposing `request_human_input(question)` tool
-- Posts to Mattermost thread, blocks for response, returns answer
+- Posts to a Matrix room thread, blocks for response, returns answer
 - Used by agents that hit a decision point and need human direction
 
 ### SP-7 — Multi-model review council
@@ -746,7 +747,7 @@ done
 - **Round 2 (only if mixed votes): sighted** — reviewers can see each other's prior comments, refine
 - **Hard cap: 3 rounds**
 - **Aggregator** (small Python script): watches Forgejo PR review states, decides label
-  - All `APPROVED` → label `agents/consensus` → notify human in Mattermost
+  - All `APPROVED` → label `agents/consensus` → notify human in Matrix
   - Mixed after 3 rounds → label `agents/dissent` + post summary of disagreement
 - **Human always merges** — never auto-merge regardless of consensus
 
@@ -835,7 +836,7 @@ Container
   ├── /run/secrets/  ← tmpfs mount, mode 0400, owned by container user
   │   ├── claude_oauth_token
   │   ├── forgejo_token
-  │   └── mattermost_bot_token
+  │   └── matrix_as_token
   └── entrypoint:
        - Tools that read files directly → pass file path
          export FORGEJO_TOKEN_FILE=/run/secrets/forgejo_token
@@ -896,7 +897,7 @@ The kanban does triple duty as the unified surface for **observability**, **labe
   - Live log stream (parsed JSON iteration events)
   - "Open shell" button → ttyd in iframe → `docker exec` into running container
   - File browser (worktree, including progress file and validation contract)
-  - Linked Forgejo PR + Mattermost thread
+  - Linked Forgejo PR + Matrix thread
   - Inline chat input (writes to SP-6 message bus → injected into next Ralph Loop iteration)
 
 **Label-driven control surface:**
@@ -964,7 +965,7 @@ The label vocabulary (e.g., `wiseprax:pause`, `wiseprax:escalate-council`, `wise
 | `SECURITY.md` | Vulnerability disclosure process, contact |
 | `.github/ISSUE_TEMPLATE/` and `.github/PULL_REQUEST_TEMPLATE/` | Lower friction for first-time contributors |
 | `docs/` site (mkdocs-material or docusaurus) | Hosted on Forgejo Pages or Cloudflare Pages |
-| `examples/` | Working Forgejo + Mattermost + Claude Code stack via Docker Compose |
+| `examples/` | Working Forgejo + Matrix (Tuwunel) + Claude Code stack via Docker Compose |
 | Demo gif/video | Single most important launch artifact — shows the workflow in 60 seconds |
 
 ### SP-C — Launch readiness + announcement venues
@@ -974,7 +975,7 @@ The label vocabulary (e.g., `wiseprax:pause`, `wiseprax:escalate-council`, `wise
 - Lobsters
 - r/selfhosted, r/programming, r/devops
 - Forgejo community channels (Forgejo Matrix room, Forgejo Discord, Forgejo blog if accepted)
-- Mattermost forums (eat-your-own-dogfood signal)
+- Matrix / Element community rooms (eat-your-own-dogfood signal); Mattermost forums (self-hosted audience)
 - Awesome lists (awesome-selfhosted, awesome-forgejo, awesome-ai-agents, awesome-llm)
 - LWN.net submission (for serious infrastructure recognition)
 
@@ -1068,6 +1069,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-04-27 | Funding pathway: GitHub Sponsors + Open Collective day-one; NLnet grant target 3–6 months in; Sovereign Tech Fund target 6–12 months in | Sovereign-tech positioning unlocks specific grant sources that prefer permissive licensing. No VC funding (incentive misalignment with sovereignty positioning). No SaaS variant unless community asks loudly. |
 | 2026-04-27 | ~~**Project name: Praxant**~~ (domain `praxant.ai`). **SUPERSEDED 2026-06-23 — see entry below.** | Original rationale preserved for history: coined word from Greek *praxis* (action with practical wisdom) + Latin *-ant* (one who does), "one who acts" (PRAK-sant). Abandoned because (a) `praxent.ai` was registered by a third party — near-identical, high confusion risk — and (b) "Praxant" is a registered medication name, a trademark hazard. |
 | 2026-06-23 | **Project renamed: Praxant → WisePrax** (domain `wiseprax.ai`; GitHub org `wiseprax`; CLI binary, daemon, and Docker image namespace all `wiseprax`). | **WisePrax = Wise + Prax** (from Greek *praxis*, action guided by practical wisdom) — reads as "wise action," a precise fit for supervised autonomous agents under human judgment. Pronounced WYZE-praks. Clears both Praxant collisions (`praxent.ai` third-party registration; "Praxant" registered medication) and cleanly mirrors the `wiseprax.ai` domain and `wiseprax` GitHub org. The `-ai` org/domain suffix is unchanged. |
+| 2026-06-23 | **v1 chat adapter: Matrix (Tuwunel homeserver + Element client) — from day one. Supersedes the 2026-04-27 Mattermost choice; Mattermost demoted to on-demand.** | Primary driver: **native OIDC**. Tuwunel ships a built-in OAuth2 / OpenID-Connect authorization server (Matrix next-generation auth) that delegates to upstream IdPs including **Keycloak** — no separate Matrix Authentication Service sidecar (Synapse requires one). Secondary: Mattermost is **open-core** — SSO/SAML, compliance exports, and several integrations are paywalled, which contradicts WisePrax's no-lock-in / sovereignty positioning; Matrix is fully open and federated. Tuwunel is a **Rust single binary** (RocksDB) with a small footprint matching the developer-hardware execution model, and is actively maintained (Swiss-government funded, official conduwuit successor, ~2–4 week release cadence). Agents integrate via the **Application Service API**; the attachment ceiling is configurable (`max_request_size` — the matrix.org 10 MB cap is SaaS-only). Design caveats carried into SP-3 / SP-6: keep supervision rooms unencrypted (or handle E2EE keys for appservice bots), set the reverse-proxy body-size limit alongside `max_request_size`, and require an OAuth2-capable client (Element). Run Tuwunel ≥ 1.6.1 (OIDC security fix over 1.5.0). |
 | 2026-04-27 | **Agent terminology: "Praxagent"** for a single agent instance running under WisePrax supervision | Distinguishes a supervised agent (containerized + Ralph Loop + message bus + council-eligible) from a raw agent CLI session. Reinforces brand identity across docs, CLI commands, and conversation. |
 | 2026-04-28 | ~~**SP-0: Fork Multica** as the orchestrator base. Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + pgvector + Next.js 16 + Docker. Single binary distribution.~~ **SUPERSEDED same day by entry below.** Original rationale preserved for history: Multica gave ~70% of what WisePrax needed (multi-CLI dispatch + Kanban + WebSocket realtime + daemon model + Postgres + state machine). OpenHands rejected (Python lock-in, worker-centric not orchestration-centric). FrankClaw rejected (domain mismatch — chat gateway, not agent orchestrator). Build-from-scratch rejected (5–7 weeks of foundation we'd reinvent). |
 | 2026-04-28 (revised) | **SP-0 reversal: drop the Multica fork. Clean-room Go implementation instead.** Tech stack unchanged in spirit: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. **No source code is copied from Multica or any other reference.** pgvector demoted from "locked" to "on-demand, not v0.1" since the original justification was inheritance from Multica. | Multica ships under a Dify-style "modified Apache 2.0" with (a) commercial-use carve-out requiring a separate commercial license for SaaS or embedded use, (b) anti-rebrand clause forbidding LOGO/copyright removal from the frontend (`apps/web/`), (c) unilateral-relicensing right + contributor-IP-feeds-our-cloud clause. This is **not OSI-approved**. A fork would inherit those terms, which conflict with WisePrax's Apache 2.0 commitment (cannot relicense Multica-derived code as pure Apache 2.0), the sovereignty positioning (vendor-controlled foundation contradicts the brand promise), and the SP-D grant strategy (NLnet, Sovereign Tech Fund effectively require OSI-approved licenses). The 5–7 weeks of "foundation we'd reinvent" cited in the original rejection of build-from-scratch is mitigated because the design decisions are already settled in this charter — clean-room build executes against a known target rather than designing as it goes. |

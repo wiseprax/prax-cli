@@ -55,7 +55,7 @@ WisePrax assumes a **single trusted host**: the developer's workstation, mini-PC
 - The internet at large
 - Anthropic / OpenAI / Google / DeepSeek API endpoints (treated as untrusted external services)
 - The Forgejo / GitHub / GitLab server hosting the source repos
-- The Mattermost / Slack / Rocket.Chat server hosting team communication
+- The Matrix (Tuwunel) / Mattermost / Slack server hosting team communication
 - Any other host on the developer's LAN
 - Backup destinations (cloud or otherwise)
 - Other users of the same machine if multi-user
@@ -126,7 +126,7 @@ These are the threats a developer's workstation actually faces in 2026, and what
 
 **Threat:** The CLAUDE_CODE_OAUTH_TOKEN expires; if the developer hasn't backed it up, agents stop working until re-auth.
 
-**Mitigation:** WisePrax tracks token expiration and warns 30 days before expiry via Mattermost notification + dashboard banner. Tokens are stored in OpenBao with replication-friendly export options. The `wiseprax auth refresh <provider>` command provides a smooth re-auth flow.
+**Mitigation:** WisePrax tracks token expiration and warns 30 days before expiry via Matrix notification + dashboard banner. Tokens are stored in OpenBao with replication-friendly export options. The `wiseprax auth refresh <provider>` command provides a smooth re-auth flow.
 
 ---
 

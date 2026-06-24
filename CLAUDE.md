@@ -44,7 +44,7 @@ These are decided. Do not re-open them in casual edits — if a change is needed
 - **Stack:** Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 App Router + Docker. (pgvector was previously locked in as "inherited from fork base"; with the fork dropped it is on-demand, not in v0.1.)
 - **Distribution:** Single Go binary via GoReleaser; deployed via `docker compose up`
 - **Execution model:** Local on developer hardware (GPU PC / mini-PC / homelab), **never CI/CD-runner-based**
-- **VCS / Chat / Agent / Model / Secret abstractions** with one v1 adapter each: Forgejo / Mattermost / Claude Code / Claude Max subscription via `CLAUDE_CODE_OAUTH_TOKEN` / OpenBao
+- **VCS / Chat / Agent / Model / Secret abstractions** with one v1 adapter each: Forgejo / Matrix (Tuwunel homeserver + Element client) / Claude Code / Claude Max subscription via `CLAUDE_CODE_OAUTH_TOKEN` / OpenBao. Matrix chosen over Mattermost for native OIDC (Tuwunel's built-in OAuth2/OIDC server → Keycloak, no MAS sidecar) and to avoid Mattermost's open-core paywall.
 - **Two-tier secrets architecture:** OpenBao is the runtime broker that issues short-lived per-task tokens to agents; Vaultwarden remains the human-managed source of truth and feeds OpenBao upstream. Agents and skills only ever see OpenBao-issued ephemeral creds.
 - **Source of truth:** the user's VCS (Forgejo for v1) — WisePrax never owns task state authoritatively
 - **Auto-merge:** never enabled by default; human merge authority unless explicit policy says otherwise
@@ -68,7 +68,7 @@ Sub-projects are defined in `project-specs.md` §7 with a dependency graph. The 
 | SP-0 | Architecture decision | Decided |
 | SP-1 | Orchestrator spine + configurable workflow engine | **Next implementation work** |
 | SP-2 | VCS provider abstraction + Forgejo adapter | Pending |
-| SP-3 | Chat provider abstraction + Mattermost adapter | Pending |
+| SP-3 | Chat provider abstraction + Matrix adapter (Tuwunel + Element) | Pending |
 | SP-4 | Agent runtime abstraction + Claude Code worker | Pending |
 | SP-5 | Container runtime + image strategy + Ralph Loop | Pending |
 | SP-6 | Live supervision message bus + MCP human-input tool | Pending |

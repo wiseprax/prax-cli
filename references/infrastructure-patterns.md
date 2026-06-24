@@ -14,7 +14,7 @@
 
 - **License:** MPL 2.0 (with the post-2023 BSL caveat on newer versions — older provider patterns predate that and remain widely used).
 - **Pattern:** **plugin architecture with a community-owned adapter ecosystem.** Terraform's core is small; the providers (AWS, GCP, Azure, …) are separate packages that implement a defined interface and ship independently.
-- **WisePrax relevance:** WisePrax's VCS, Chat, Agent, Model, and Secret abstractions follow the same shape. SP-2, SP-3, SP-4, SP-9 each ship one v1 adapter (Forgejo, Mattermost, Claude Code, OpenBao); additional adapters come on demand, owned by whoever needs them.
+- **WisePrax relevance:** WisePrax's VCS, Chat, Agent, Model, and Secret abstractions follow the same shape. SP-2, SP-3, SP-4, SP-9 each ship one v1 adapter (Forgejo, Matrix/Tuwunel, Claude Code, OpenBao); additional adapters come on demand, owned by whoever needs them.
 - **What to borrow:** the discipline of treating the core and the adapters as separately versioned, separately reviewed surfaces.
 
 ## Backstage

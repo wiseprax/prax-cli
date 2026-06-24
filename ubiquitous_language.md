@@ -96,7 +96,7 @@ WisePrax has six provider abstractions, each with a default v1 adapter and an op
 | **AgentRuntime** | Claude Code (subscription via OAuth token) | Interface for spawning agent CLIs as subprocesses |
 | **ModelRouter** | (Implicit — agent CLIs handle their own model auth) | Future abstraction for direct model routing if needed |
 | **VCSProvider** | Forgejo | Webhook ingest, posting comments/reviews/labels, PR operations |
-| **ChatProvider** | Mattermost | Posting messages, reactions (approval primitive), threads, supervision messages |
+| **ChatProvider** | Matrix (Tuwunel + Element) | Posting messages, reactions (approval primitive), threads, supervision messages |
 | **SecretProvider** | OpenBao (with `.env` file as zero-config fallback) | Reading secrets, writing secrets (for OAuth refresh), per-task injection into containers |
 | **Container runtime** | Docker | Spawning per-task containers, tmpfs mounts, network isolation |
 
@@ -113,7 +113,7 @@ WisePrax has six provider abstractions, each with a default v1 adapter and an op
 
 | Term | Definition | Usage notes |
 |---|---|---|
-| **Approval gate** | A human-in-loop checkpoint before a praxagent is dispatched. The orchestrator posts a message to the configured chat platform; an authorized user must react with ✅ before execution begins. | Implemented via the universal "emoji reaction" primitive — works identically across Mattermost, Slack, Rocket.Chat, Discord. |
+| **Approval gate** | A human-in-loop checkpoint before a praxagent is dispatched. The orchestrator posts a message to the configured chat platform; an authorized user must react with ✅ before execution begins. | Implemented via the universal "emoji reaction" primitive — works identically across Matrix, Mattermost, Slack, Rocket.Chat, Discord. |
 | **Message bus** | The per-task bidirectional channel between humans and a running praxagent. Implemented via PostgreSQL `LISTEN`/`NOTIFY` on a channel named `task_<id>_messages`. | Use when discussing live supervision. The message bus is for runtime communication, not approval (which is a separate primitive). |
 | **Operator** | A human user of WisePrax who dispatches, supervises, approves, or interacts with praxagents. | Use "operator" instead of "user" when emphasizing the supervisory role. Operators talk to praxagents via the message bus or the Kanban UI. |
 | **MCP human-input tool** | An MCP server tool exposed to praxagents that lets the agent ask the operator for input mid-execution. Posts to the configured chat thread, blocks for response, returns the operator's reply. | Distinct from the message bus (which is operator-initiated). MCP human-input is agent-initiated. |
