@@ -25,10 +25,17 @@
 - **What it is:** Cursor's hosted background-agent feature; runs in Cursor's cloud, integrates with the Cursor IDE.
 - **WisePrax's anti-position:** same as Devin/Copilot — hosted, IDE-bound, proprietary. WisePrax is a VCS-centric local platform.
 
+## Internal fintech agents: Stripe Minions, Ramp Inspect, Coinbase Cloudbot
+
+- **What they are:** in-house, closed coding agents built for a single company's own engineers. Stripe's **Minions** (announced Feb 2026) are one-shot end-to-end coding agents against a curated toolset of ~500 tools; **Ramp Inspect** and **Coinbase Cloudbot** are the equivalents at those firms. None is a product; none is for sale.
+- **Why they matter anyway:** all three converged independently on the same architecture — Slack as the control surface, an isolated cloud sandbox per task, deliberately curated (not maximal) toolsets, subagent delegation, PR-as-deliverable. LangChain's **Open SWE** was published as the open-source distillation of exactly that convergence, which makes the architecture readable without any of the three being open. Detail lives in `open-swe.md`; this entry exists so the names resolve.
+- **WisePrax's anti-position:** these are the *build-it-yourself* answer, available only to firms with a platform team to spare. WisePrax's bet is that the same architecture, packaged as sovereign open-source infrastructure and running on local hardware, is what everyone else needs. Their existence is validation of the shape; their inaccessibility is the opening.
+
 ## What we learn from them
 
 - **The market believes autonomous coding agents are real.** WisePrax doesn't need to argue the category exists; it argues only about the *shape* (sovereign, local, runtime-neutral, supervised).
 - **The hosted SaaS shape is the default; the sovereign local shape is the open lane.** Devin, Copilot Workspace, and Cursor agents all chose hosted SaaS. The sovereign-local niche is largely unfilled at production-grade quality — that's WisePrax's lane.
+- **Serious engineering orgs are building this in-house rather than buying it.** Stripe, Ramp, and Coinbase each built their own instead of adopting a vendor — evidence that the hosted-SaaS shape does not satisfy teams with real constraints, and that the demand is for infrastructure rather than for a product.
 - **Auditability and cost predictability are growing complaints.** Both map to WisePrax's positioning anchors in `project-specs.md` §2.
 
 ## Borrow / Adapt / Reject
