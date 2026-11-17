@@ -25,7 +25,7 @@ Traycer is a **developer-present desktop application**. WisePrax is **background
 | Source of truth | its own SQLite / Yjs records + cloud sync | the user's VCS (Forgejo v1) |
 | Isolation | git worktree (filesystem separation) | Docker container + default-deny egress allowlist |
 | Team layer | hosted cloud, per-seat billing, GitHub OAuth SSO | self-hosted, Keycloak/OIDC, no seats |
-| Orchestrator | proprietary Host binary | Apache 2.0 Go binary |
+| Orchestrator | proprietary Host binary | Apache 2.0 Rust binary |
 
 Worktrees are the point to be careful about: **a worktree is not a sandbox.** It separates files, not process, network, or credentials. Traycer has no published container or egress story. WisePrax's `threat-model.md` position that container egress lockdown is "the single highest-leverage security control" is untouched by Traycer.
 

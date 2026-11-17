@@ -1,6 +1,6 @@
 # References
 
-> **Purpose.** Catalog of every project WisePrax studies as prior art, with the patterns we borrow, adapt, or reject explicitly named per project. Prevents vague "inspired by" framing and enforces the clean-room-Go discipline (`CLAUDE.md` → "Borrow patterns, copy no code — absolute").
+> **Purpose.** Catalog of every project WisePrax studies as prior art, with the patterns we borrow, adapt, or reject explicitly named per project. Prevents vague "inspired by" framing and enforces the clean-room-Rust discipline (`CLAUDE.md` → "Borrow patterns, copy no code — absolute").
 > **Status.** v1, designed for iteration. Add new files as the landscape moves. The single comparative artifact is `COMPARISON.md` — extend it whenever you add a project.
 
 ## How to read this directory

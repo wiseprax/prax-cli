@@ -51,7 +51,7 @@ The "—" cells mean the axis isn't applicable to that product's shape (IDE-embe
 
 One paragraph each. Not a substitute for the per-project files in this directory.
 
-- **WisePrax** — local orchestration platform for *supervised* autonomous coding agents, with VCS as source of truth, configurable workflow engine, multi-model review council, and a live supervision message bus. Apache 2.0, Go, single binary, runs on the user's developer hardware.
+- **WisePrax** — local orchestration platform for *supervised* autonomous coding agents, with VCS as source of truth, configurable workflow engine, multi-model review council, and a live supervision message bus. Apache 2.0, Rust, single binary, runs on the user's developer hardware.
 - **Traycer** — "nerve center for agentic coding." Electron desktop workspace running Claude Code / Codex / Cursor / OpenCode in parallel inside durable Tasks, with agent-to-agent delegation, git-worktree isolation, and real-time team boards. **The closest published project to WisePrax's §4.1 wedge, and it ships today** — but MIT covers only the clients and wire protocol; the Host (the actual orchestrator) and the cloud backends are proprietary. Open-core, desktop-shaped, platform-owns-state. TypeScript/Bun/Nx. **Most important entry in this directory.** See `traycer.md`.
 - **Open SWE (LangChain)** — open-source framework for an org's internal coding agent, published as the distillation of three independently-built production systems: **Stripe's Minions**, **Ramp's Inspect**, and **Coinbase's Cloudbot**. Slack/Linear/GitHub invocation, immediate acknowledgement, background work, PR back into the originating thread, mid-task follow-up via a deterministic thread ID, ~15 curated tools, subagent delegation, `AGENTS.md` conventions. MIT, Python on LangGraph + Deep Agents, self-hostable control plane — but **every task executes in a third-party cloud sandbox** (Modal, Daytona, Runloop, E2B, LangSmith), with no local execution provider. **The strongest open-source entrant on organizational orchestration, and the direct inverse of WisePrax on execution location.** See `open-swe.md`.
 - **Roast (Shopify)** — convention-over-configuration **workflow engine** for interleaving deterministic steps with LLM steps, built by Shopify's Augmented Engineering DX team on the premise that "non-determinism is the enemy of reliability." Ruby DSL of "cogs" (`chat`, `agent`, `ruby`, `cmd`, `map`, `repeat`, `call`), step-level session replay, and an explicit design goal of *replacing* LLM steps with deterministic code as understanding matures. MIT, Ruby gem + CLI, single-user, no isolation or supervision layer. **Not a competitor — it occupies the SP-1 problem space alone, and is the most important prior art for the configurable workflow engine.** See `roast.md`.
@@ -124,13 +124,13 @@ The tenet is *why* WisePrax stays small and *why* skill authors can extend it wi
 
 Every praxagent runs in a Docker container with a default-deny egress allowlist (Anthropic API, Forgejo, package mirrors). `threat-model.md` calls this *"the single highest-leverage security control."* Paperclip's containerization story is not stated. OpenHands runs in containers but doesn't default to egress lockdown. The hosted SaaS competitors have this internally but you can't inspect or change it.
 
-### 4.8 Apache 2.0 + DCO + clean-room Go + grant-eligible
+### 4.8 Apache 2.0 + DCO + clean-room Rust + grant-eligible
 
 The licensing posture is not glamorous, but it's load-bearing:
 
 - **Apache 2.0** — OSI-approved permissive license, no relicensing right, no commercial-use carve-out. Multica's "modified Apache" is *not* this and was rejected for that reason.
 - **DCO** (not CLA) — contributors keep their copyright; signing a CLA is not required.
-- **Clean-room Go** — no source forked from any prior project. Every reference in this directory is studied for patterns only.
+- **Clean-room Rust** — memory-safe, no source forked from any prior project. Every reference in this directory is studied for patterns only.
 - **Grant-eligible** — NLnet, Sovereign Tech Fund, and similar funders effectively require OSI-approved licenses without carve-outs.
 
 This is why WisePrax can credibly position as sovereign-infrastructure-grade open source, where Devin/Cognition/Copilot Workspace structurally cannot, and Multica strictly cannot.

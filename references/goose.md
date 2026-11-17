@@ -31,7 +31,7 @@ A **general-purpose local AI agent** — not specifically a coding agent — tha
 
 ### Borrow
 - MCP as the extension surface (already aligned via SP-6).
-- Local-first / native-binary distribution (already aligned via GoReleaser).
+- Local-first / native-binary distribution (already aligned: single static Rust binary — Goose is itself Rust).
 - Provider-neutral interface discipline.
 
 ### Adapt

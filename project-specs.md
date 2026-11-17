@@ -71,7 +71,7 @@ This project draws inspiration from several existing systems but is **not derive
 | **LiteLLM** | Inspiration for multi-provider abstraction | ~95% community-contributed providers — proves the adapter pattern scales |
 | **Terraform** | Inspiration for provider plugin architecture | Community-owned adapter ecosystem proven at scale |
 
-**WisePrax design choices that align with patterns proven elsewhere** (the patterns inform shape, never source code — WisePrax is a clean-room Go implementation):
+**WisePrax design choices that align with patterns proven elsewhere** (the patterns inform shape, never source code — WisePrax is a clean-room Rust implementation):
 - Skills + hooks pattern as a way to encode operational knowledge per project
 - Vaultwarden as the human-managed source of truth for credentials, with OpenBao as the runtime broker
 - Forgejo + Matrix (Tuwunel) as primary v1 VCS + chat — common in sovereign self-hosted stacks
@@ -296,7 +296,7 @@ Owned by the platform:
 - supervision (who is running, what they are doing)
 - control (label-driven dispatch via the kanban)
 - persistence (state, transcripts, transitions, workflow definitions)
-- deterministic transitions (a Go workflow engine executing admin-configured definitions stored in Postgres; skills serve as actors). Workflow shape is mutable through the admin UI; runtime execution against a fixed definition is deterministic — *deterministic until the rules from the server change*.
+- deterministic transitions (a Rust workflow engine executing admin-configured definitions stored in Postgres; skills serve as actors). Workflow shape is mutable through the admin UI; runtime execution against a fixed definition is deterministic — *deterministic until the rules from the server change*.
 - adapter abstractions (VCS, chat, agent runtime, model, secrets)
 
 Pushed out to skills and agents:
@@ -386,7 +386,7 @@ These must be resolved before implementation. Each is a sub-project unto itself 
 
 | Open question | Why it matters | Owner |
 |---|---|---|
-| ~~**Fork base / language / database / UI**~~ | **DECIDED 2026-04-28: clean-room Go build, no fork.** Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. Single-binary deployment. Multica's architecture is studied as inspiration but **no Multica source code is copied** — Multica's "modified Apache 2.0" license (commercial-use carve-out, anti-rebrand, unilateral-relicensing) is incompatible with WisePrax's Apache 2.0 + sovereignty + grant-funding strategy. Patterns also borrowed (without code) from FrankClaw, OpenHands, ai-jail, Aider, Cline. | — |
+| ~~**Fork base / language / database / UI**~~ | **DECIDED 2026-04-28: clean-room build, no fork. Language revised 2026-11-17: Go → Rust (see §11).** Tech stack: Rust (axum + sqlx + tokio) + PostgreSQL 17 + Next.js 16 + Docker. Single-binary deployment. Multica's architecture is studied as inspiration but **no Multica source code is copied** — Multica's "modified Apache 2.0" license (commercial-use carve-out, anti-rebrand, unilateral-relicensing) is incompatible with WisePrax's Apache 2.0 + sovereignty + grant-funding strategy. Patterns also borrowed (without code) from FrankClaw, OpenHands, ai-jail, Aider, Cline. | — |
 | ~~**Project name**~~ | **DECIDED 2026-04-27: WisePrax** (domain wiseprax.ai reserved) | — |
 | **Initial v1 scope (MVP definition)** | Determines whether ship is in 3 weeks or 3 months. Pareto-driven: ship the 20% that delivers 80% of value. | SP-A finalization |
 | **Governance model details** | Initial: solo BDFL; transitions to core-team after first co-maintainer. SP-D defines the specific transition triggers. | SP-D |
@@ -489,7 +489,7 @@ Brief notes per sub-project. Each gets a full design document during its own bra
 
 ### SP-0 — Architecture decision
 
-**Decision (2026-04-28): clean-room Go implementation. No fork.**
+**Decision (2026-04-28): clean-room implementation. No fork.** Implementation language: **Rust** (revised 2026-11-17 from the original Go choice — see "Why Rust (not Go)" below and §11).
 
 **Original 2026-04-28 decision was "Fork Multica"; reversed the same day** after reviewing Multica's `LICENSE` file. Multica ships under a Dify-style "modified Apache 2.0" with three teeth incompatible with WisePrax:
 
@@ -503,19 +503,31 @@ This is **not OSI-approved**. A fork would inherit these terms, which conflict w
 - The sovereignty positioning (`README.md`, `why-wiseprax.md`) — building a "no vendor lock-in" platform on a vendor-controlled foundation is structurally incoherent.
 - The SP-D grant-funding pathway — NLnet and Sovereign Tech Fund effectively require OSI-approved licenses.
 
-The Go stack-language decision was re-evaluated independently and stands on its own merits (see "Why Go, not Rust" below).
+The stack-language decision was re-evaluated independently of the fork question. Go was selected on 2026-04-28; that choice was **reversed to Rust on 2026-11-17** (see "Why Rust (not Go)" below).
 
-**Tech stack (locked in):**
+**Tech stack (locked in, revised 2026-11-17):**
 
 | Layer | Choice |
 |---|---|
-| Orchestrator language | Go (Chi router, sqlc, gorilla/websocket) |
+| Orchestrator language | Rust (stable, 2024 edition), async on **tokio** |
+| HTTP server / router | **axum** (tower middleware for auth, tracing, timeouts) |
+| Database access | **sqlx** — compile-time-checked SQL (the sqlc analogue), built-in migrations, `PgListener` for Postgres LISTEN/NOTIFY |
 | Database | PostgreSQL 17 (pgvector on-demand, not v0.1) |
-| Frontend | Next.js 16 with App Router |
-| Realtime | WebSocket (gorilla/websocket on the server side) |
-| Container runtime | Docker (managed via canonical `docker/docker` Go SDK) |
-| Distribution | Single binary via GoReleaser → published to Forgejo Container Registry + GitHub Container Registry |
+| Realtime | WebSocket via axum's built-in `ws` support (tokio-tungstenite underneath) |
+| Container runtime | Docker, managed via **bollard** |
+| Serialization | **serde** / serde_json |
+| Error handling | **thiserror** (library crates) + **anyhow** (binary crate) |
+| Observability | **tracing** + tracing-subscriber; OpenTelemetry export on-demand, not v0.1 |
+| Outbound HTTP (Forgejo, OpenBao, model APIs) | **reqwest** with rustls |
+| Chat adapter (SP-3) | **matrix-sdk** (matrix-rust-sdk, the reference Matrix SDK) |
+| MCP surface (SP-1 / SP-6) | **rmcp** (official Rust MCP SDK) |
+| CLI (`wiseprax audit`, admin commands) | **clap** |
+| Supply-chain hygiene | `Cargo.lock` committed; **cargo-deny** (licenses + advisories) and **cargo-audit** in CI |
+| Frontend | Next.js 16 with App Router (unchanged) |
+| Distribution | Single static binary (musl target) via **GoReleaser's Rust builder** (cargo-zigbuild) → published to Forgejo Container Registry + GitHub Container Registry |
 | Deployment | `docker compose up` for the user — orchestrator + Postgres + (later) OpenBao |
+
+Crates are added on demand under the same YAGNI rule as adapters: the table above is the v0.1 ceiling, not a shopping list.
 
 **Comparative analysis (revised 2026-04-28):**
 
@@ -524,27 +536,37 @@ The Go stack-language decision was re-evaluated independently and stands on its 
 | **Fork Multica** | Inherit "modified Apache 2.0" license; cannot relicense as Apache 2.0; sovereignty positioning broken; grant funding foreclosed; unilateral-relicensing risk on every upstream pull | **Rejected — license-incompatible.** |
 | **Fork OpenHands** | MIT license (clean), but Python ecosystem; worker-centric not orchestration-centric; significant rework needed for the multi-runtime/multi-VCS abstraction shape WisePrax requires | Rejected — language and shape mismatch outweigh license cleanliness. |
 | **Fork FrankClaw** | Domain mismatch (chat-channel-to-AI gateway, not agent orchestrator); ~70% would still need to be written | Rejected — domain mismatch. |
-| **Clean-room Go build** | No license inheritance; full freedom of design; ~5–7 weeks of foundation work | **Selected** — only path that preserves Apache 2.0 + sovereignty + grant eligibility simultaneously. The "5–7 weeks of foundation" cost is mitigated because the design decisions (state machine shape, queue model, UI shape, adapter contracts) are already settled in this charter. |
+| **Clean-room build** | No license inheritance; full freedom of design; ~5–7 weeks of foundation work | **Selected** — only path that preserves Apache 2.0 + sovereignty + grant eligibility simultaneously. The "5–7 weeks of foundation" cost is mitigated because the design decisions (state machine shape, queue model, UI shape, adapter contracts) are already settled in this charter. |
 
-**Why Go (not Rust):**
+**Why Rust (not Go) — revised 2026-11-17:**
 
-Stack-language decision was re-evaluated when the fork base was dropped. Go remains the right choice:
+Go was chosen on 2026-04-28 (original rationale preserved in §11). Re-evaluated while still pre-implementation — zero code written, so the switch costs only spec edits. Rust selected:
 
-| Factor | Why Go wins for WisePrax |
+| Factor | Why Rust for WisePrax |
 |---|---|
-| **Workload profile** | WisePrax is plumbing — HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess capture. Hot paths are I/O, not CPU. Rust's safety/perf advantages don't bind. |
-| **Velocity to v0.1** | Go ships the same scope materially faster (no async-coloring tax, faster iteration loops). The 9–13 week roadmap depends on Go-stack productivity. |
-| **Contributor pool** | SP-C and SP-D depend on the self-hosted-homelab and sovereign-tech contributor pool, which is overwhelmingly Go: Forgejo, Gitea, Mattermost server, OpenBao, HashiCorp Vault, Terraform, Kubernetes. |
-| **Pattern cribbing** | Forgejo / Mattermost / Vault adapters are easier to write when upstream source is Go — same idioms, same SDK shapes. |
-| **Docker SDK** | Go has the canonical `docker/docker` client (the reference implementation). Rust's `bollard` is good but not canonical. |
-| **Sandboxing primitives** | Where Rust would actually shine (landlock, seccomp, tiny sidecars) is a SP-5 concern, not v0.1. A Go orchestrator can shell out to a Rust helper later if it ever matters. |
+| **Maintainer conviction** | The maintainer prefers Rust and expects to sustain it through a long solo build. For a founder-led project, sustained motivation outweighs marginal stack differences (see §12 maintainer-burnout risk). |
+| **AI-tooling trajectory** | The agent-tooling ecosystem is increasingly Rust-native (Codex CLI, the official MCP SDK `rmcp`, Hugging Face `tokenizers` / `candle`, Tuwunel). Betting on Rust aligns WisePrax with where agent infrastructure is heading. |
+| **Matrix** | matrix-rust-sdk is the reference Matrix SDK; the v1 homeserver (Tuwunel) is Rust. SP-3 gets a first-class client instead of a secondary one. |
+| **Sandboxing primitives** | landlock, seccomp, namespaces (SP-5, the ai-jail pattern) are first-class in Rust — no separate helper binary or second language needed. |
+| **Correctness of the spine** | Two state machines (task lifecycle + workflow engine) benefit from exhaustive `match`, enums-as-states, and `Send`/`Sync` checking of concurrent dispatch. Whole classes of runtime bugs become compile errors. |
+| **Grant positioning** | NLnet / Sovereign Tech Fund actively favour memory-safe infrastructure; a Rust orchestrator strengthens the SP-D story. |
+| **Single binary** | Static musl binary — same distribution story as Go. |
+
+**Costs accepted (named, not hidden):**
+
+| Cost | Mitigation |
+|---|---|
+| **Velocity to v0.1** — async Rust (lifetimes across `.await`, `Send` bounds, compile times) is slower than Go for plumbing | Pareto v0.1 scope unchanged; keep the spine simple (owned data, `Arc` + channels, no clever lifetimes); tracked in §12 risk register |
+| **Contributor pool** — self-hosted tooling (Forgejo, OpenBao, Vault) is Go-heavy | Adapters talk REST via reqwest; no need to share idioms with upstream source. Rust's OSS contributor pool is large and growing |
+| **Docker SDK** — bollard is mature but not the canonical `docker/docker` client | bollard covers the container lifecycle WisePrax needs; fall back to Docker Engine REST for gaps |
+| **Forgejo / OpenBao clients** — no first-party Rust SDKs | Thin typed REST clients written in-house (clean-room), scoped to the operations each adapter actually uses |
 
 **Patterns borrowed (without copying source code):**
 
-| From | Patterns we adopt — *written from scratch in Go* |
+| From | Patterns we adopt — *written from scratch in Rust* |
 |---|---|
 | **Multica** | Multi-CLI dispatch shape, Kanban UI shape, daemon-spawns-CLI worker model, Postgres-backed task state machine, WebSocket realtime layout. Studied at the architecture/README level only. **Source code not read for copy purposes; not vendored, not adapted.** |
-| **FrankClaw** | Loopback-default with mandatory auth for network exposure; single-binary deployment story (Go achieves this); WebSocket keepalive + auto-reconnect; `wiseprax audit` CLI with severity-rated findings; tool approval cards UI pattern |
+| **FrankClaw** | Loopback-default with mandatory auth for network exposure; single-binary deployment story (Rust achieves this); WebSocket keepalive + auto-reconnect; `wiseprax audit` CLI with severity-rated findings; tool approval cards UI pattern |
 | **OpenHands** | Container isolation patterns; per-task ephemeral container lifecycle; agent UI primitives (file tree, log stream) |
 | **ai-jail** | Sandbox primitives if/when sandbox policy needs hardening (default-deny sensitive paths, lockdown mode pattern, seccomp considerations) — adopted on demand, not pre-built |
 | **Aider** | Diff-first interaction (show changes before applying); repo-map seeding for large codebases (when need surfaces) |
@@ -552,7 +574,7 @@ Stack-language decision was re-evaluated when the fork base was dropped. Go rema
 
 **The architectural principle:**
 
-Borrow many patterns, copy no code. WisePrax is a clean-room Go implementation under Apache 2.0 + DCO. Every line of code is written by WisePrax contributors. References are studied at the architecture/README/blog-post level for *what shape works*; their source trees are not vendored, forked, or copied in part.
+Borrow many patterns, copy no code. WisePrax is a clean-room Rust implementation under Apache 2.0 + DCO. Every line of code is written by WisePrax contributors. References are studied at the architecture/README/blog-post level for *what shape works*; their source trees are not vendored, forked, or copied in part.
 
 ### SP-1 — Orchestrator spine
 
@@ -571,13 +593,13 @@ Borrow many patterns, copy no code. WisePrax is a clean-room Go implementation u
 
 **Two state machines, distinct concerns.** SP-1 maintains *two* state machines that must not be conflated:
 
-1. **Task lifecycle** (above) — orchestrator-level; hard-coded in Go; identical for every project; tracks a task's path from webhook intake to terminal state.
+1. **Task lifecycle** (above) — orchestrator-level; hard-coded in Rust; identical for every project; tracks a task's path from webhook intake to terminal state.
 2. **Workflow engine** (added 2026-05-09 / 2026-05-10) — praxagent-internal; configurable per project; tracks the multi-step coding flow inside a task (e.g., `PLANNED → RESEARCHING → EXECUTING → REVIEWED → MERGED`).
 
 **Workflow engine — components:**
 - **Definition schema:** states, transitions, actor types per transition, conditions (predicate names) that gate transitions, task dependencies (which define synch points for parallel actors).
 - **Postgres persistence:** `workflow_definitions`, `workflow_instances`, `workflow_transitions` history, `actor_permissions`.
-- **Deterministic Go engine:** matches recorded outcomes to transition rules and advances state. Does **not** evaluate predicates, decompose features, manage retries, or carry per-step logic — those live in skills (per the §4 substrate-not-behavior tenet and four-part test).
+- **Deterministic Rust engine:** matches recorded outcomes to transition rules and advances state. Does **not** evaluate predicates, decompose features, manage retries, or carry per-step logic — those live in skills (per the §4 substrate-not-behavior tenet and four-part test).
 - **REST or MCP surface** (interface choice TBD, see §6) for actors to query state, query authorized next transitions, record outcomes, advance state. Same surface exposes proxied operations on downstream services so credentials never reach skill prompts (see SP-9 security boundary).
 - **Admin UI** lives in SP-8 — authors definitions and actor permissions. **No config-file authoring**; the DB is the one authoritative copy that gets enforced team-wide when admins change it.
 
@@ -1073,7 +1095,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-04-27 | **Agent terminology: "Praxagent"** for a single agent instance running under WisePrax supervision | Distinguishes a supervised agent (containerized + Ralph Loop + message bus + council-eligible) from a raw agent CLI session. Reinforces brand identity across docs, CLI commands, and conversation. |
 | 2026-04-28 | ~~**SP-0: Fork Multica** as the orchestrator base. Tech stack: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + pgvector + Next.js 16 + Docker. Single binary distribution.~~ **SUPERSEDED same day by entry below.** Original rationale preserved for history: Multica gave ~70% of what WisePrax needed (multi-CLI dispatch + Kanban + WebSocket realtime + daemon model + Postgres + state machine). OpenHands rejected (Python lock-in, worker-centric not orchestration-centric). FrankClaw rejected (domain mismatch — chat gateway, not agent orchestrator). Build-from-scratch rejected (5–7 weeks of foundation we'd reinvent). |
 | 2026-04-28 (revised) | **SP-0 reversal: drop the Multica fork. Clean-room Go implementation instead.** Tech stack unchanged in spirit: Go (Chi + sqlc + gorilla/websocket) + PostgreSQL 17 + Next.js 16 + Docker. **No source code is copied from Multica or any other reference.** pgvector demoted from "locked" to "on-demand, not v0.1" since the original justification was inheritance from Multica. | Multica ships under a Dify-style "modified Apache 2.0" with (a) commercial-use carve-out requiring a separate commercial license for SaaS or embedded use, (b) anti-rebrand clause forbidding LOGO/copyright removal from the frontend (`apps/web/`), (c) unilateral-relicensing right + contributor-IP-feeds-our-cloud clause. This is **not OSI-approved**. A fork would inherit those terms, which conflict with WisePrax's Apache 2.0 commitment (cannot relicense Multica-derived code as pure Apache 2.0), the sovereignty positioning (vendor-controlled foundation contradicts the brand promise), and the SP-D grant strategy (NLnet, Sovereign Tech Fund effectively require OSI-approved licenses). The 5–7 weeks of "foundation we'd reinvent" cited in the original rejection of build-from-scratch is mitigated because the design decisions are already settled in this charter — clean-room build executes against a known target rather than designing as it goes. |
-| 2026-04-28 (revised) | **Stack-language decision (Go) re-evaluated independently and stands.** Considered Rust given the "we're rewriting anyway" framing; rejected. | WisePrax is plumbing (HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess) where Rust's safety/perf advantages don't bind. Go ships the same scope materially faster (no async-coloring tax). The self-hosted-tooling contributor pool is overwhelmingly Go (Forgejo, Gitea, Mattermost server, OpenBao, HashiCorp Vault, Terraform, Kubernetes), which materially helps adapter implementation, contributor onboarding, and SP-C/SP-D growth. Docker has its canonical Go SDK. Where Rust would shine (landlock/seccomp sandboxing, tiny in-container sidecars) is a SP-5 concern that doesn't bind v0.1; a Go orchestrator can shell out to a Rust helper later if needed. |
+| 2026-04-28 (revised) | ~~**Stack-language decision (Go) re-evaluated independently and stands.**~~ **SUPERSEDED 2026-11-17 — language switched to Rust (see entry below).** Original rationale preserved for history: Considered Rust given the "we're rewriting anyway" framing; rejected. | WisePrax is plumbing (HTTP, Postgres LISTEN/NOTIFY, Docker SDK, WebSocket, subprocess) where Rust's safety/perf advantages don't bind. Go ships the same scope materially faster (no async-coloring tax). The self-hosted-tooling contributor pool is overwhelmingly Go (Forgejo, Gitea, Mattermost server, OpenBao, HashiCorp Vault, Terraform, Kubernetes), which materially helps adapter implementation, contributor onboarding, and SP-C/SP-D growth. Docker has its canonical Go SDK. Where Rust would shine (landlock/seccomp sandboxing, tiny in-container sidecars) is a SP-5 concern that doesn't bind v0.1; a Go orchestrator can shell out to a Rust helper later if needed. |
 | 2026-04-28 | **Pattern-borrow from all references, copy no source code:** Multica (multi-CLI dispatch shape, Kanban UI shape, daemon-spawns-CLI model, Postgres state machine, WebSocket realtime — studied at architecture level, source not vendored), FrankClaw (security stance, audit CLI, deployment), OpenHands (worker isolation, container patterns), ai-jail (sandbox primitives on demand), Aider (diff-first, repo-map), Cline/Cursor Background (tiered approval, cost meter, spawn-from-chat) | WisePrax is a clean-room Go implementation under Apache 2.0 + DCO. References inform shape; every line of code is written by WisePrax contributors. |
 | 2026-04-28 | **Pareto-driven roadmap.** v0.1 ships the 20% that delivers 80% of value (single VCS adapter, single chat or web-UI approval, single agent runtime, .env secrets, basic Kanban). Every feature outside v0.1 set is explicitly NOT built until v0.1 ships and users request it. | Get to "Show HN" launch with the smallest possible WisePrax that real users will adopt. Defer multi-model council, ~~OpenBao~~ (revisited 2026-05-10 — OpenBao moved into v0.1 as the runtime broker), live supervision, multiple adapters, all brainstormed features to later versions. |
 | 2026-04-27 | Audience defined by persona (self-hosted dev/team avoiding US-cloud SaaS), global from day one | Persona is consistent across regions; no benefit to artificially tiering by geography |
@@ -1094,6 +1116,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | 2026-05-10 | **Two-tier secrets architecture: OpenBao as the runtime broker, Vaultwarden retained as upstream source of truth.** Reverses the 2026-04-27 choice of Vaultwarden as the v0.1 first adapter. Vaultwarden continues to host human-managed long-lived secrets (PATs, OAuth tokens, API keys) — same place admins already manage them, no migration. OpenBao runs as a runtime broker (likely in a container alongside the orchestrator), is fed from Vaultwarden via a sync layer (mechanism TBD at SP-9 design time), and is what the orchestrator actually authenticates against (AppRole) to receive **short-lived per-task tokens**. Skills and agents only ever see traces of OpenBao-issued ephemeral credentials, never Vaultwarden directly. The §4 vendor-neutrality matrix, the §5 secrets-decision row, the §7 SP-9 brief, the §9 SP-9 detail, and Phase 2 description are all updated to reflect this. | The credential-helper pattern committed in the platform-API-as-security-boundary decision (same day, earlier entry) requires short-lived dynamic tokens — Vaultwarden cannot issue those (it is a static-secret store). OpenBao supports AppRole auth, KV-v2 paths, response wrapping, and dynamic secrets, all of which are needed to make the layered defense in SP-9 actually feasible. The two-tier pattern keeps the master secrets where humans already manage them (Vaultwarden) while hardening the runtime credential surface (OpenBao). It also reverses the 2026-04-28 "defer OpenBao" line in the Pareto-driven roadmap — OpenBao is now in v0.1 because the security architecture depends on its capabilities. |
 | 2026-05-10 | **Charter expansion: validation contracts, structured handoffs, recovery heuristics, mission-control UX, council guidance.** Following 2026-05-09 / 2026-05-10 design discussions, the charter incorporates: (a) **validation contracts** as worktree artifacts — assertions defining "done" written by the planner-skill, consumed by validator-skills; (b) **structured handoff document** as the schema for SP-1's progress file — what was completed, what remains, commands run with exit codes, issues discovered, plus recovery-state heuristics (dirty-tree-with-tests-passing → probably done; dirty-tree-with-tests-failing → likely mid-flight broken); (c) **validation-loopback as a first-class transition** in workflow definitions — validation rarely succeeds first try; (d) **serial execution with parallelism scoped to read-only operations** — confirms the task-dependencies-define-synch decision; (e) **provider diversity over model diversity** for the deferred SP-7 council; (f) **mission-control-style UX cues** (% features complete, % budget burned) for SP-8; (g) **Ralph Loop "one engineer in a relay team"** framing as the canonical interpretation in SP-5. | Multiple independent design discussions converged on these primitives. They tighten the substrate-not-behavior tenet by giving it concrete v0.1 / v0.2-queued primitives. |
 | 2026-05-11 | **Admin area scope expanded inside SP-8; v0.1 spin-up may run on relaxed-security credential backing.** The kanban app's admin area is the single authoritative surface for everything substrate: workflow shape, **personas / actor types** (mapping skill-declared actor types to the team's actual humans / bots / runtimes), **authorization rules** (who may fire what transition, which proxied operations each actor type can call), **thresholds, limits, metrics** (token caps, wall-clock caps, concurrency caps, budget alerts), and **connections / credentials** (every downstream service URL + token — VCS, chat, agent runtime OAuth, model-provider tokens, MCP server endpoints). Skills can ship workflow-shape *suggestions* via registration-time manifests, but the saved authoritative copy and every enforced transition belong to the team. Separately, the v0.1 *bring-up* phase may use an in-DB encrypted credentials table (key from env) as the OpenBao backing while the spine comes alive end-to-end; OpenBao is plugged in as the actual backend before v0.1 ships publicly. The **interface** exposed to skills (platform API as security boundary, skills never see raw tokens, only typed proxied operations) is non-negotiable from day one — only the backing storage is allowed to be simple during dogfooding. | Two related realizations: (a) "no admin-UI bottleneck for skill-supplied workflows" was wrong because the admin UI is irreducible — personas, authorization, thresholds, and credentials are team-level concepts that no skill manifest can supply; skill manifests prefill the workflow-shape portion only. (b) Gating "first running task" on the full two-tier OpenBao broker is needless friction during dogfood; the security architecture's load-bearing piece is the *interface contract* (skills can't touch raw tokens), which can sit in front of either backing. Phasing the backing keeps the contract honest without paying the OpenBao integration tax before any task has ever run. |
+| 2026-11-17 | **SP-0 language reversal: Go → Rust.** Orchestrator is a clean-room **Rust** implementation. Library set: tokio (runtime), axum (HTTP + WebSocket), sqlx (compile-time-checked SQL, migrations, LISTEN/NOTIFY), bollard (Docker), serde, thiserror + anyhow, tracing, reqwest (rustls), matrix-sdk (SP-3), rmcp (MCP), clap (CLI), cargo-deny + cargo-audit (supply chain). Distribution: static musl binary via GoReleaser's Rust builder. Everything else in SP-0 unchanged: PostgreSQL 17, Next.js 16 frontend, Docker, `docker compose up`, Apache 2.0 + DCO, no fork, no copied code. Supersedes the 2026-04-28 "Go stands" entry. | Project is pre-implementation (no code exists), so the switch costs only doc edits and will never be cheaper. Drivers: (a) maintainer conviction — the maintainer prefers Rust and expects to sustain it, which directly mitigates the solo-maintainer burnout risk; (b) maintainer's thesis that Rust is becoming the language of AI tooling, with the agent ecosystem increasingly Rust-native (Codex CLI, `rmcp`, `tokenizers`/`candle`, Tuwunel); (c) matrix-rust-sdk is the reference Matrix SDK and Tuwunel is Rust; (d) sandbox primitives (landlock/seccomp, SP-5) are first-class without a second language; (e) type system strengthens both state machines; (f) memory-safe infrastructure strengthens NLnet / STF grant positioning. Costs accepted: slower v0.1 velocity (async Rust), Go-heavy self-hosted contributor pool, bollard not canonical, no first-party Forgejo/OpenBao Rust SDKs — mitigations in §9 SP-0 and §12. |
 
 ---
 
@@ -1111,6 +1134,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 | Clean-room rewrite slips the v0.1 timeline beyond the 9–13 week budget | Medium | Medium | Pareto-driven v0.1 scope keeps the build small (1 VCS, 1 chat, 1 agent runtime, 1 model); architectural references (Multica, OpenHands, FrankClaw) remain available as shape guidance even though no code is copied; design decisions are already settled in this charter, so the build executes against a known target |
 | A future contributor copies code from a license-incompatible reference (Multica, etc.) into WisePrax | Low (with policy) | High | CONTRIBUTING.md explicitly forbids copying source from any reference; PR review checks for unattributed similarity; contributors agree via DCO that submissions are their own work |
 | OSS launch lands flat (no users) | High | Medium | Phase 5 launch criteria explicitly include "demo video + working compose + dogfood proof"; quality > timing |
+| Async-Rust learning curve slows the SP-1 spine (lifetimes across `.await`, `Send` bounds, compile times) | Medium | Medium | Keep the spine boring: owned data, `Arc` + tokio channels, no clever lifetimes; fast-check loop (`cargo check` / `bacon`); timebox any borrow-checker fight and restructure instead of fighting |
 | Maintainer burnout (solo project) | Medium | High | SP-D explicitly plans contributor pipeline and bus-factor mitigation from day one |
 | Critical bug in agent code damages production repos | Medium | High | Container isolation + git worktrees per task + default-deny network egress + never-auto-merge |
 
@@ -1124,7 +1148,7 @@ Decisions made during the architecture brainstorm. Date in ISO format. Each is o
 
 2. **Brainstorm SP-A (Positioning)** — Tagline finalization + audience persona document. (Project name + license already decided: **WisePrax** + Apache 2.0 + DCO.) ~1 day of focused work. Output: `docs/specs/SP-A-positioning.md`.
 
-3. ~~**Brainstorm SP-0 (Architecture decision)**~~ — **DECIDED 2026-04-28: clean-room Go build, no fork.** Tech stack: Go + Postgres 17 + Next.js 16 + Docker. Multica is studied as architectural inspiration only; **no Multica source code is copied**. See §11 decision log for full rationale, including the license-incompatibility analysis that reversed the original same-day fork decision.
+3. ~~**Brainstorm SP-0 (Architecture decision)**~~ — **DECIDED 2026-04-28: clean-room build, no fork; language revised 2026-11-17 to Rust.** Tech stack: Rust (axum + sqlx + tokio) + Postgres 17 + Next.js 16 + Docker. Multica is studied as architectural inspiration only; **no Multica source code is copied**. See §11 decision log for full rationale, including the license-incompatibility analysis that reversed the original same-day fork decision.
 
 4. **Brainstorm + write spec for SP-1 (Orchestrator spine)** — First piece of code. Output: `docs/specs/SP-1-orchestrator-spine.md`.
 
@@ -1193,7 +1217,7 @@ Projects whose architecture / code / community we should learn from:
 
 The discussion is flushed into the charter. The architecture is now decided enough to move toward implementation. Next concrete action when ready: SP-A formal brainstorm to finalize tagline + persona docs, then begin writing the SP-1 (orchestrator spine) implementation plan with the writing-plans skill — which is when this conversation transitions from design to actual code.
 
-**Recap:** We're designing WisePrax, a sovereign self-hosted AI agent orchestration platform; the project charter, threat model, ubiquitous language, and domain runbook are written and SP-0 is locked (**clean-room Go build, no Multica fork** — license incompatibility forced the same-day reversal of the original fork decision; architecture remains Multica-inspired but every line of code is written from scratch). Next: finalize SP-A tagline and persona docs, then start the SP-1 orchestrator implementation plan.
+**Recap:** We're designing WisePrax, a sovereign self-hosted AI agent orchestration platform; the project charter, threat model, ubiquitous language, and domain runbook are written and SP-0 is locked (**clean-room Rust build, no Multica fork** — language switched from Go to Rust on 2026-11-17 — license incompatibility forced the same-day reversal of the original fork decision; architecture remains Multica-inspired but every line of code is written from scratch). Next: finalize SP-A tagline and persona docs, then start the SP-1 orchestrator implementation plan.
 
 ---
 

@@ -40,7 +40,7 @@ Roast is a **single-user CLI library**. It has no server, no queue, no multi-ten
 
 | Dimension | Roast | WisePrax |
 |---|---|---|
-| Shape | Ruby gem + CLI, invoked by a developer | served Go orchestrator, background/queued |
+| Shape | Ruby gem + CLI, invoked by a developer | served Rust orchestrator, background/queued |
 | Workflow definition lives in | **a Ruby file in the repo, under version control** | **Postgres, authored from the admin UI** (`CLAUDE.md`, SP-1) |
 | Human posture | fire-and-inspect; resume by replay | supervising a running agent, interruptible mid-task (SP-6) |
 | Isolation | none — runs on the host filesystem | Docker container + default-deny egress |

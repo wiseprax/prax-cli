@@ -85,7 +85,7 @@ The broader autonomous-agent OSS ecosystem (Multica, OpenHands, Aider, Cline, Fr
 
 The product opportunity is in the synthesis — and in the specific stances none of those references take.
 
-WisePrax is a **clean-room implementation in Go**. It studies prior systems for what works and writes its own code. **No source code is forked from any of those references.** Multica was briefly considered as a fork base, but its "modified Apache 2.0" license — commercial-use carve-outs, anti-rebrand clauses, unilateral-relicensing rights — is incompatible with WisePrax's Apache 2.0 commitment, sovereign-tech positioning, and grant-funding strategy.
+WisePrax is a **clean-room implementation in Rust**. It studies prior systems for what works and writes its own code. **No source code is forked from any of those references.** Multica was briefly considered as a fork base, but its "modified Apache 2.0" license — commercial-use carve-outs, anti-rebrand clauses, unilateral-relicensing rights — is incompatible with WisePrax's Apache 2.0 commitment, sovereign-tech positioning, and grant-funding strategy.
 
 With the execution model made explicitly local-first, the abstractions generalized, and the implementation written cleanly under a permissive OSI-approved license, there is a real platform here that the rest of the ecosystem has not produced.
 

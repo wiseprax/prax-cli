@@ -56,7 +56,7 @@ These are documentation absences in Paperclip's published README, not refuted cl
 - **"Looks like a task manager" UX framing** — counterpoint when refining SP-8's kanban shape.
 
 ### Adapt
-- **Plugin / adapter registry pattern** — useful for VCS, Chat, Agent, Model, Secret adapters in WisePrax, but WisePrax's adapters are server-side interfaces in Go, not Node plugins.
+- **Plugin / adapter registry pattern** — useful for VCS, Chat, Agent, Model, Secret adapters in WisePrax, but WisePrax's adapters are server-side traits in Rust, not Node plugins.
 
 ### Reject
 - **"Zero-human companies" framing** — WisePrax explicitly keeps a human in the loop (configurable policy, never assumed). The framing also implies broader scope than coding.

@@ -30,13 +30,13 @@ Any *one* of those is enough to put the license outside the OSI's Open Source De
 
 ## Why it was studied anyway
 
-Multica was briefly selected as a fork base on 2026-04-28 morning and reversed the same day after the license terms were read carefully. The discovery forced a reframing: **WisePrax is a clean-room Go implementation. Multica is a pattern source, not a foundation.** See `project-specs.md` §11 (decision log) for the dated reversal.
+Multica was briefly selected as a fork base on 2026-04-28 morning and reversed the same day after the license terms were read carefully. The discovery forced a reframing: **WisePrax is a clean-room implementation (Go at the time; Rust since 2026-11-17). Multica is a pattern source, not a foundation.** See `project-specs.md` §11 (decision log) for the dated reversal.
 
 ## Patterns worth borrowing (without code)
 
 - **Multi-CLI dispatch model** — the idea of treating different agent CLIs as interchangeable workers behind a common interface. WisePrax's SP-4 (agent runtime abstraction) is the direct descendant.
 - **Kanban UI with WebSocket live updates** — visual surface for in-flight agents. WisePrax's SP-8 uses the same shape (live-updated kanban over WebSocket), but adds label-driven control and workflow authoring.
-- **Go + Next.js stack** — confirmed as a viable combination for this product class.
+- **Compiled backend + Next.js frontend** — confirmed as a viable shape for this product class. (Multica is Go; WisePrax uses Rust since 2026-11-17.)
 
 ## What WisePrax explicitly does not inherit
 

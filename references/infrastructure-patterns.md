@@ -21,7 +21,7 @@
 
 - **License:** Apache 2.0.
 - **Pattern:** **extension points for plugin-rich platforms.** Backstage's plugin model lets organizations add internal-tool integrations without forking the core.
-- **WisePrax relevance:** less directly applicable to v0.1 (WisePrax's adapters are typed Go interfaces, not Backstage-style frontend plugins), but a reference for how a platform stays extensible as adoption grows.
+- **WisePrax relevance:** less directly applicable to v0.1 (WisePrax's adapters are typed Rust traits, not Backstage-style frontend plugins), but a reference for how a platform stays extensible as adoption grows.
 
 ## Errbot
 

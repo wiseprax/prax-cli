@@ -157,11 +157,11 @@ WisePrax is OSS. Contributors can submit PRs that, if merged, could include back
 
 ### 4.3 Supply-chain attacks against dependencies
 
-If a Go module, Python package, npm package, or Docker base image used by WisePrax is compromised upstream, WisePrax inherits the compromise. Mitigation:
+If a Rust crate, Python package, npm package, or Docker base image used by WisePrax is compromised upstream, WisePrax inherits the compromise. Mitigation:
 
 - Pin all dependencies to specific versions (no `:latest`, no floating versions)
-- Verify checksums where supported (`go.sum`, `package-lock.json`, `Pipfile.lock`)
-- Periodic audit of transitive dependencies
+- Verify checksums where supported (`Cargo.lock`, `package-lock.json`, `Pipfile.lock`)
+- Periodic audit of transitive dependencies (`cargo-audit` for RustSec advisories, `cargo-deny` for license + source policy)
 - Minimal dependency surface (don't pull in libraries we don't need)
 
 But WisePrax cannot guarantee its dependencies are not compromised. **No tool can.** This is a project-wide concern shared with every modern software project.
